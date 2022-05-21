@@ -1,0 +1,1083 @@
+---
+title: Extremal real option value in far-from-market contexts
+author:
+  - name: Benjamin Schiek
+    email: b.schiek@cgiar.com
+    affiliation: CIAT
+address:
+  - code: CIAT
+    address: Alliance of Bioversity International and CIAT, Km 17 Recta Cali-Palmira, Valle del Cauca, Colombia, CP 763537
+abstract: |
+  I derive the necessary and sufficient conditions for optimal value of a real option with lognormally distributed net present value. The solution is optimal in the sense that it maximizes the option's improvement---that is to say, the increase in the option's value between inception and maturity. An expression for optimal net present option value, as well as equations by which to solve for optimizing parameter values, follow as corrollaries. The expression for optimized real option value is considerably simpler than the unoptimized expression, potentially facilitating real option funding decision workflows.
+keywords: 
+  - Real option value
+  - Far-from-market
+journal: "Research Policy"
+date: "`r Sys.Date()`"
+classoption: preprint, 3p, authoryear
+bibliography: OptimalOptions.bib
+header-includes:
+- \numberwithin{equation}{section}
+linenumbers: false
+numbersections: true
+# Use a CSL with `citation_package = "default"`
+# csl: https://www.zotero.org/styles/elsevier-harvard
+output: 
+  rticles::elsevier_article:
+    keep_tex: true
+    citation_package: natbib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      message = FALSE,
+                      warning = FALSE,
+                      dev = c("png", "tiff"),
+                      dpi = 300)
+library(tidyverse)
+library(patchwork)
+
+label_size <- 2.5
+smallLabel_size <- 2
+title_size <- 8
+subtitle_size <- 7
+legendText_size <- 7
+axisText_size <- 6
+axisTitle_size <- 7
+facetTitle_size <- 7
+
+```
+
+
+# Introduction
+
+In this article, I derive the necessary and sufficient conditions to maximize improvement in the real option value $f$ of a project with lognormally distributed net present value $x$ over the life of the project, from inception at $t = 0$ to maturity at $t = T$. In other words, I find the solution $f^*$ that maximizes the definite integral
+
+\begin{equation}
+\int_0^T \frac{df}{dt} \:dt = f(T) - f(0)
+\end{equation}
+
+To derive the sufficient condition, I draw on a famous insight of Black and Scholes' in order to reduce the necessary condition to a wave equation, which is then solved using D'Alambert's formula. The optimized (i.e. improvement maximizing) expression $f^*$ then follows by evaluating the Black-Scholes partial differential equation at the necessary condition, resulting in a second wave equation again soluble via D'Alambert's formula. The functional form $f^*$ is considerably simpler than the unoptimized form $f$, potentially facilitating ROV workflows. An equation by which to solve for optimal control variables also follows from the derivation.
+<!-- [Assuming maximum improvement is desirable, the solution $f^*$ provides a pragmatic reference point against which to compare real option value. A donor or manager may think twice about investing in a project if its real option value diverges substantially from the optimal value $f^*$.] -->
+
+Before embarking upon the main derivation, it is first necessary to explain exactly what is meant by real option value, and to clear up some confusion regarding the validity of "risk-neutral valuation" in real options contexts.
+<!-- [I begin by clarifying exactly what I mean by real option value. I highlight engage with the key literature re:complexity as a problem. To motivate interest in the simplicity, I point to the key sources of complexity... The results presented here rest upon the key assumption of lognormally distributed NPV, which is widely eschewed in the ROV literature as unrealistic. I therefore begin with a brief defense of this assumption.] -->
+Despite a flood of academic interest in ROV following Myers' initial insight (see, for example, Hayes and Garvin [-@hayes1982managing], McGrath and MacMillan [-@mcgrath2000assessing], Doctor, Newton, and Pearson [-@doctor2001managing], and Newton, Paxson, and Widdicks [-@newton2004real]), adoption of the real options approach by real world decision makers remains relatively low [@horn2015use; @triantis2005realizing; @driouchi2012real]. ROV critics and proponents alike attribute this tepid reception to the formal complexity of evaluating and explaining ROV as compared to the default NPV approach [@triantis2005realizing]. Much of this complexity can be traced back to confusion surrounding the interpretation of a financial artifact called "risk-neutral valuation" in ROV contexts.
+
+## Confusion regarding "risk-neutral valuation" in ROV contexts
+
+The derivation of equation \ref{eq:rov} via the method of straightforward integration, as presented in the Appendix, is atypical of the ROV literature. Most authors instead cite the Black-Scholes partial differentiation equation as the source of the ROV formula [@black1973valuation]. The method of straightforward integration is considerably simpler than the Black-Scholes approach. In financial contexts, the Black-Scholes approach is advantageous because it generates a whole class of functional forms known as the "financial derivatives", of which the European call option formula is just one.
+
+More importantly, the Black-Scholes approach reveals, as a by-product, a deep result known as the principle of "risk-neutral valuation": If it is not possible to make risk-free profits above the risk-free rate of return (the "no-arbitrage" rule), then investors are risk-neutral, i.e. "investors do not increase the expected return they require from an investment in order to compensate for increased risk" [@hull9thEdition]. Mathematically, this means that the $m$ in equation \ref{eq:rov} must be set equal to $r$^[Where $r$, in financial contexts, refers to the risk-free rate of return]. (Details given in the next section.)
+
+The principle of risk-neutral valuation rests squarely upon the no-arbitrage rule, which is enforced through the market. This is fine in the financial context. However, in the ROV context, there is no clear theoretical or empirical basis for the no-arbitrage rule. Real project NPV is not a traded good, and there is no clear mechanism that might serve as a market analogue. On the contrary, most ROV contexts, especially research contexts, may be characterized as far-from-market---or even market failures, which the underlying project is supposed to redress. Empirically, it is a matter of public knowledge that project donors and managers are generally not risk-neutral; i.e., they would require an increase in expected project NPV to justify funding for a project with increased risk.
+
+Critics note that the ROV literature is silent and/or conflicted on this point [@borison2005real; @block2007real]. It is not uncommon for ROV studies, and even ROV introductory texts, to assume risk-neutral valuation without any justification (see, for example, Trigeorgis [-@trigeorgis1993real], Majd and Pindyck [-@majd1987time], or Kemna [-@kemna1993case]). Some studies acknowledge the invalidity of the no-arbitrage argument in ROV contexts, but instead invoke "complete markets" to justify risk-neutral valuation (see, for example, Pennings and Lint [-@pennings1997option]). The complete markets assumption implies that 1) project NPV can be simulated by a portfolio of traded securities, and hence project risk can be hedged away by buying and/or selling these traded securities; and 2) project managers actually engage in the buying and selling of securities necessary to achieve this hedge. One may say without controversy that neither (1) nor (2) are common features of most far-from-market project management landscapes.
+
+Mathematically, the absence of any empirical or theoretical premise for risk-neutral valuation in ROV contexts means that there is no reason to set $m$ in equation \ref{eq:rov} equal to $r$. This deceptively minute detail figures critically in the derivation of the necessary and sufficient conditions for improvement maximizing ROV.
+<!-- ## Low adoption of the ROV approach -->
+<!-- Despite a flood of academic enthusiasm and interest in ROV following Myers' initial insight (see, for example, Hayes and Garvin [-@hayes1982managing], McGrath and MacMillan [-@mcgrath2000assessing], Doctor, Newton, and Pearson [-@doctor2001managing], and Newton, Paxson, and Widdicks [-@newton2004real]), adoption of the real options approach by real world decision makers remains relatively low [@horn2015use; @triantis2005realizing; @driouchi2012real]. ROV critics and proponents alike attribute the tepid reception among practitioners to the formal complexity of evaluating and explaining ROV as compared to the default NPV approach [@triantis2005realizing]. -->
+
+# Maximum ROV improvement
+
+Henceforth, let $ROV$ be denoted by $f$, and let $x_t$ be denoted $x(t)$. A practitioner may be interested in maximizing the improvement in ROV over the project timeline. That is, they may want to maximize
+
+\begin{equation}
+f(T) - f(0)
+\end{equation}
+
+which can also be written
+
+\begin{equation}
+A(x) = \int^{T}_0 \frac{df}{dt} \:dt
+\label{eq:action}
+\end{equation}
+
+In physics, such equations are called the "action". Letting $\mathcal{L} = \frac{df}{dt}$, the necessary condition for maximum (or minimum, or stationary) action is called Euler's condition:
+
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial x} = \frac{d}{dt} \left( \frac{\partial \mathcal{L}}{\partial \dot{x}} \right)
+\label{eq:eulCond}
+\end{equation}
+
+(See Lebedev and Cloud [-@lebedev2003calculus] for details.)
+
+## The non-market Black-Scholes PDE
+
+Continuing with the assumption that $x(t)$ follows a geometric Brownian motion, then, by Ito's lemma, the evolution of a function $f(x, t)$ is described as follows.
+
+\begin{equation}
+\Delta f = \left( \frac{\partial f}{\partial x} m x + \frac{\partial f}{\partial t} + \frac{1}{2} \frac{\partial^2 f}{\partial x^2} s^2 x^2 \right) \Delta t + \frac{\partial f}{\partial x} s x \epsilon \sqrt{\Delta t}
+\label{eq:itoLem}
+\end{equation}
+
+(See Hull [-@hull9thEdition] for details.)
+
+Black and Scholes [-@black1973valuation] famously noted that equations \ref{eq:gbmEq} and \ref{eq:itoLem} could be combined so as to eliminate the random term as follows.
+
+\begin{equation}
+\Delta f - \frac{\partial f}{\partial x} \Delta x = \left(\frac{\partial f}{\partial t} + \frac{1}{2} \frac{\partial^2 f}{\partial x^2} s^2 x^2 \right) \Delta t
+\label{eq:bsInsight1}
+\end{equation}
+
+In the financial context, the left-hand side of this equation may be thought of as the instantaneous evolution over the increment $\Delta t$ of a portfolio long one share of the financial derivative $f$ and short a quantity $\partial f / \partial x$ of the underlying security $x(t)$. This is where Black and Scholes applied their no-arbitrage argument: Since the random---i.e. risky---term has been eliminated from equation \ref{eq:bsInsight1}, then the profit or loss of this portfolio over the increment $\Delta t$ must be riskless. That is, it must be equal to the starting value of the portfolio times the risk free rate ($r$).
+
+\begin{equation}
+\Delta f - \frac{\partial f}{\partial x} \Delta x = \left( f - \frac{\partial f}{\partial x} x \right) r \Delta t
+\end{equation}
+
+Equating the right-hand side of this equation with the right-hand side of the previous equation, the $\Delta t$'s cancel, resulting in the Black-Scholes partial differentiation equation (PDE).
+
+\begin{equation}
+\left( f - \frac{\partial f}{\partial x} x \right) r = \frac{\partial f}{\partial t} + \frac{1}{2} \frac{\partial^2 f}{\partial x^2} s^2 x^2 \end{equation}
+
+Black and Scholes solved this PDE under the boundary condition $f(T) = \max(x(T) - K, 0)$, resulting in an expression for $f$ identical to the one derived above in equation \ref{eq:rov}, _with the exception_ that $m$ is replaced with $r$.
+
+But Black and Scholes' insight can be decomposed into two consecutive insights. The first insight is that, having eliminated the random terms in equation \ref{eq:bsInsight1}, the now deterministic equation implies the evolution of the left-hand side must be constant over the interval $\Delta t$. This means the evolution in terms of $\Delta f$ and $\Delta x$ on the left-hand side of equation \ref{eq:bsInsight1} may be rewritten in terms of a time evolution, as follows.
+
+\begin{equation}
+\Delta f - \frac{\partial f}{\partial x} \Delta x = \left( f - \frac{\partial f}{\partial x} x \right) \kappa \Delta t
+\end{equation}
+
+Where $\kappa$ is some constant with respect to the interval $\Delta t$.
+
+The second insight is about resolving the value of $\kappa$. In financial markets, the no-arbitrage rule requires that $\kappa = r$. In the absence of the no-arbitrage rule, however, the $r$ in the Black-Scholes PDE must be replaced by $\kappa$. Moreover, solving this non-market version of the Black-Scholes PDE at the boundary condition $f(T) = \max(x(T) - K, 0)$ and comparing it to equation \ref{eq:rov} reveals that $\kappa = m$. In the absence of the no-arbitrage rule, then, the Black-Scholes PDE must default to
+
+\begin{equation}
+\left( f - \frac{\partial f}{\partial x} x \right) m = \frac{\partial f}{\partial t} + \frac{1}{2} \frac{\partial^2 f}{\partial x^2} s^2 x^2 \end{equation}
+
+This is the relevant version of the Black-Scholes PDE in far-from-market ROV contexts.
+
+## Necessary condition
+
+The total derivative in equation \ref{eq:bsInsight1} can be expressed as follows.
+
+\begin{equation}
+\frac{df}{dt} = \frac{\partial f}{\partial x} \dot{x} + \frac{\partial f}{\partial t} + \frac{s^2 x^2}{2} \frac{\partial^2 f}{\partial x^2} \:\:;\:\:\: \dot{x} = \frac{dx}{dt}
+\label{eq:lagrang}
+\end{equation}
+
+This is a lagrangian $\mathcal{L}$ that can be fed into the Euler condition (equation \ref{eq:eulCond}). The left-hand side of the Euler condition thus becomes
+
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial x} = \frac{\partial^2 f}{\partial x^2} \dot{x} + \frac{\partial}{\partial x} \left( \frac{\partial f}{\partial t} \right) + \frac{s^2}{2} \frac{\partial}{\partial x} \left(x^2 \frac{\partial^2 f}{\partial x^2} \right) 
+\end{equation}
+
+The right-hand side of the Euler condition, meanwhile, resolves as follows.
+
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial \dot{x}} = \frac{\partial f}{\partial x}
+\end{equation}
+
+And so
+
+\begin{equation}
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{x}}\right) = \frac{\partial }{\partial t} \left( \frac{\partial f}{\partial x} \right) + \frac{\partial^2 f}{\partial x^2} \dot{x}
+\end{equation}
+
+Equating the two sides of the Euler condition and simplifying,
+
+\begin{equation}
+\begin{split}
+\frac{\partial^2 f}{\partial x^2} \dot{x} + \frac{\partial}{\partial x} \left( \frac{\partial f}{\partial t} \right) + \frac{s^2}{2} \frac{\partial}{\partial x} \left(x^2 \frac{\partial^2 f}{\partial x^2} \right) = \frac{\partial }{\partial t} \left( \frac{\partial f}{\partial x} \right) + \frac{\partial^2 f}{\partial x^2} \dot{x} \\
+\frac{\partial}{\partial x} \left( \frac{\partial f}{\partial t} \right) + \frac{s^2}{2} \frac{\partial}{\partial x} \left(x^2 \frac{\partial^2 f}{\partial x^2} \right) = \frac{\partial }{\partial t} \left( \frac{\partial f}{\partial x} \right)
+\end{split}
+\end{equation}
+
+By Clairut's theorem,
+
+\begin{equation}
+\frac{\partial}{\partial t} \left( \frac{\partial f}{\partial x} \right) = \frac{\partial}{\partial x} \left( \frac{\partial f}{\partial t} \right)
+\end{equation}
+
+And so the Euler condition further simplifies to
+
+\begin{equation}
+\frac{s^2}{2} \frac{\partial}{\partial x} \left(x^2 \frac{\partial^2 f}{\partial x^2} \right) = 0
+\end{equation}
+
+Which can be integrated with respect to $x$ as follows,
+
+\begin{equation}
+\frac{s^2 x^2}{2} \frac{\partial^2 f}{\partial x^2} = k(t)
+\label{eq:necCond}
+\end{equation}
+
+Where $k(t)$ is constant with respect to $x$ but may be some function of time.
+
+## Sufficient condition
+
+Equation \ref{eq:necCond} is the necessary condition to maximize the action (equation \ref{eq:action}). The sufficient condition is
+
+\begin{equation}
+A(x) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(x + \psi(x)) \bigr|_{\mathcal{L} = \mathcal{L}^*} < 0
+\end{equation}
+
+Where $\psi(x)$ is an infinitely differentiable bell shaped function that vanishes at the boundaries of $x(t)$.
+
+\begin{equation}
+\psi(x(0)) = \psi(x(T)) = 0
+\end{equation}
+
+(See Lebedev and Cloud [-@lebedev2003calculus] for details.)
+
+The optimized lagrangian $\mathcal{L}^*$ is found by evaluating the unoptimized lagrangian $\mathcal{L}$ in equation \ref{eq:lagrang} at the necessary condition in equation \ref{eq:necCond}, giving
+
+\begin{equation}
+\mathcal{L}^* = \frac{\partial f}{\partial x} \dot{x} + \frac{\partial f}{\partial t} + k(t)
+\end{equation}
+
+The left-hand side of the sufficient condition thus resolves to
+
+\begin{equation}
+A(x) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(x + \psi(x)) \bigr|_{\mathcal{L} = \mathcal{L}^*} = \int_0^{\tau} \frac{\partial f}{\partial u} (\dot{x} + \dot{\psi}) - \frac{\partial f}{\partial x} \dot{x} + \frac{\partial f}{\partial t} \bigr|_{x + \psi} - \frac{\partial f}{\partial t} \bigr|_{x} \:dt \:\:;\:\:\: u = x + \psi
+\end{equation}
+
+But note that
+
+\begin{equation}
+\begin{split}
+\frac{\partial f}{\partial x} \dot{x} &= \frac{\partial f}{\partial u} \frac{d u}{d x} \dot{x} \\
+&= \frac{\partial f}{\partial u} \left(1 + \frac{d \psi}{d x} \right) \dot{x} \\
+&= \frac{\partial f}{\partial u} \left(1 + \frac{\partial \psi}{\partial x} \right) \frac{dx}{dt} \\
+&= \frac{\partial f}{\partial u} (\dot{x} + \dot{\psi})
+\end{split}
+\end{equation}
+
+So that the previous equation reduces to
+
+\begin{equation}
+A(x) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(x + \psi(x)) \bigr|_{\mathcal{L} = \mathcal{L}^*} = \int_0^{\tau} \frac{\partial f}{\partial t} \bigr|_{x + \psi} - \frac{\partial f}{\partial t} \bigr|_{x} \:dt
+\label{eq:sufCond}
+\end{equation}
+
+To evaluate this, note that the necessary condition (equation \ref{eq:necCond}) can be rearranged as follows
+
+\begin{equation}
+\frac{s^2 x}{2} \frac{\partial^2 f}{\partial x^2} = \frac{k(t)}{x}
+\end{equation}
+
+Integrating both sides with respect to $\ln(x)$ then gives
+
+\begin{equation}
+\frac{s^2}{2} \frac{\partial f}{\partial x} = -\frac{k(t)}{x} + c(t)
+\label{eq:dfdx}
+\end{equation}
+
+Where $c(t)$ is a constant of integration with respect to $x$, but might be some function of time. Integrating again with respect to $x$ gives
+
+\begin{equation}
+\frac{s^2}{2} f = -k(t) \ln(x) + c(t) x + b(t)
+\label{eq:fStar}
+\end{equation}
+
+Where $b(t)$ is another constant of integration with respect to $x$. Subtracting equation \ref{eq:} from equation \ref{eq:} then gives
+
+\begin{equation}
+\frac{s^2}{2} \left( f - \frac{\partial f}{\partial x} x \right) = -k(t) (\ln(x) - 1) + b(t)
+\end{equation}
+
+Recalling equation \ref{eq:} , the left-hand side can be rewritten as follows.
+
+\begin{equation}
+\frac{s^2}{2 m} \left( \frac{\partial f}{\partial t} + k(t) \right) = -k(t) (\ln(x) - 1) + b(t)
+\end{equation}
+
+This can then be solved for $\partial f / \partial t$ as follows.
+
+\begin{equation}
+\frac{\partial f}{\partial t} = m \left[ -k(t) \left( \frac{2}{s^2} (\ln(x) - 1) + 1 \right) + \frac{2}{s^2} b(t) \right]
+\label{eq:dfdt}
+\end{equation}
+
+Equation \ref{eq:sufCond} thus evaluates to
+
+\begin{equation}
+\int_0^{\tau} 2 \frac{m}{s^2} [-k(t) (\ln(x + \psi(x)) -  \ln(x)) ] \:dt
+\label{eq:sufCond2}
+\end{equation}
+
+Which is negative if $k(t) > 0$. The sufficient condition for maximum action is thus satisfied so long as $k(t) > 0$. To determine $k(t)$, recall equation \ref{eq:} and note that by the Black Scholes insight (equation \ref{eq:}), it can be reduced to
+
+\ref{eq:bsrovpse}
+
+
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial x} = \frac{\partial^2 f}{\partial x^2} \dot{x} - m \frac{\partial^2 f}{\partial x^2}
+\end{equation}
+
+So that the Euler condition then becomes
+
+\begin{equation}
+\begin{split}
+\frac{\partial}{\partial t} \left( \frac{\partial f}{\partial x} \right) + m \frac{\partial^2 f}{\partial x^2} x= 0 \\
+\frac{\partial}{\partial t} \left( \frac{\partial f}{\partial x} \right) + m \frac{\partial}{\partial \ln(x)} \left( \frac{\partial f}{\partial x} \right) = 0
+\end{split}
+\end{equation}
+
+<!-- Substituting $\tau = T - t$ for $t$ and multiplying through by $-1$, -->
+
+<!-- \begin{equation} -->
+<!-- \frac{\partial}{\partial \tau} \left( \frac{\partial f}{\partial x} \right) - m \frac{\partial}{\partial \ln(x)} \left( \frac{\partial f}{\partial x} \right) = 0 -->
+<!-- \end{equation} -->
+
+Factoring out $\partial f / \partial x$ and substituting $\tau$ for $T - t$,
+
+\begin{equation}
+\left( \frac{\partial}{\partial \tau} - m \frac{\partial}{\partial \ln(x)}   \right) \frac{\partial f}{\partial x} = 0
+\label{eq:linWav}
+\end{equation}
+
+Multiplying through by $(\partial / \partial \tau + m \partial / \partial \ln(x))$,
+
+\begin{equation}
+\begin{split}
+\left( \frac{\partial}{\partial \tau} + m \frac{\partial}{\partial \ln(x)}   \right) \left( \frac{\partial}{\partial \tau} - m \frac{\partial}{\partial \ln(x)}   \right) \frac{\partial f}{\partial x} &= 0 \\
+\frac{\partial^2}{\partial \tau^2} \left( \frac{\partial f}{\partial x} \right) - m^2 \frac{\partial^2}{\partial \ln(x)^2}  \left( \frac{\partial f}{\partial x} \right) &= 0
+\end{split}
+\label{eq:wavEq1}
+\end{equation}
+
+Equation \ref{eq:wavEq1} is a wave equation that can be solved using D'Alambert's formula as follows. Letting $g(\ln(x), \tau) = \partial f / \partial x$ and $g_0 = g(\ln(x_0), 0)$,
+
+\begin{equation}
+g(\ln(x), \tau) = \frac{1}{2} ( g_0(\ln(x_0) + m \tau) + g_0(\ln(x_0) - m \tau)) + \frac{1}{2 m} \int_{\ln(x_0) - m \tau}^{\ln(x_0) + m \tau} \frac{\partial g}{\partial \tau} \bigr|_{\tau = 0} \: d \omega
+\label{eq:dAlemb}
+\end{equation}
+
+By equation \ref{eq:linWav}, the integral can be rewritten
+
+\begin{equation}
+\begin{split}
+\frac{1}{2 m} \int_{\ln(x_0) - m \tau}^{\ln(x_0) + m \tau} m \frac{\partial g}{\partial \ln(x)} \bigr|_{\tau = 0} \: d \omega &= \frac{1}{2} \int_{\ln(x_0) - m \tau}^{\ln(x_0) + m \tau} \frac{\partial g}{\partial \ln(x)} \bigr|_{\tau = 0} \: d \omega \\
+&= \frac{1}{2} (g_0(\ln(x_0) + m \tau) - g_0(\ln(x_0) - m \tau))
+\end{split}
+\end{equation}
+
+Substituting this back into D'Alambert's formula and simplifying,
+
+\begin{equation}
+g(\ln(x), \tau) = \frac{1}{2} g_0(\ln(x_0) + m \tau)
+\end{equation}
+
+The function $g_0$ is determined by evaluating equation \ref{eq:dfdx} at $\tau = 0$.
+
+\begin{equation}
+\begin{split}
+g_0 &= \frac{\partial f}{\partial x} \bigr|_{\tau = 0} = \frac{2}{s^2} \left( - \frac{k(0)}{x_0} + c(0) \right) \\
+&= -\frac{2}{s^2} k(0) e^{-\ln(x_0)} + \frac{2}{s^2} c(0)
+\end{split}
+\end{equation}
+
+D'Alambert's formula thus resolves to
+
+\begin{equation}
+g(\ln(x), \tau) = -\frac{2}{s^2} \left( \frac{k(0)}{x_0} e^{-m \tau} + c(0) \right)
+\label{eq:dAlembSol}
+\end{equation}
+
+Combining this with equation \ref{eq:dfdx} and solving for $k(\tau)$ then gives
+
+\begin{equation}
+k(\tau) = k(0) e^{-m \tau} + x_0(c(0) - c(\tau))
+\end{equation}
+
+Since $k(\tau)$ is only a function of $\tau$ and not of $x$, then it must be that $c(\tau)$ is a constant with respect to both $x$ and $\tau$, such that $c(\tau) = c(0)$. The expression for $k(\tau)$ thus reduces to
+
+\begin{equation}
+k(\tau) = k(0) e^{-m \tau}
+\end{equation}
+
+The constant $k(0)$ can be deduced by setting the right-hand side of this expression equal to the left-hand side of the necessary condition in equation \ref{eq:necCond}.
+
+\begin{equation}
+k(0) e^{-m \tau} = \frac{s^2 x^2}{2} \frac{\partial^2 f}{\partial x^2}
+\end{equation}
+
+Since $f$ is not itself scaled by a constant, then it must be that the constant $k(0)$ corresponds to $\frac{s^2}{2}$, and hence
+
+\begin{equation}
+k(\tau) = \frac{s^2}{2} e^{-m \tau}
+\label{eq:kTau}
+\end{equation}
+
+By which it follows that $k(\tau) > 0$. The sufficiency condition for maximum action (equation \ref{eq:sufCond}) is therefore fulfilled.
+
+<!-- The integral in this expression can be resolved by differentiating equation \ref{eq:dfdt} with respect to $x$ and substituting $\tau$ for $t$.  -->
+
+<!-- \begin{equation} -->
+<!-- \frac{\partial}{\partial x} \left( \frac{\partial f}{\partial t} \right) = -2 \frac{m}{s^2} \frac{k(t)}{x} -->
+<!-- \end{equation} -->
+
+<!-- Recall that, by Clairut's theorem, -->
+
+<!-- $$ -->
+<!-- \frac{\partial}{\partial x} \left( \frac{\partial f}{\partial t} \right) = \frac{\partial}{\partial t} \left( \frac{\partial f}{\partial x} \right) -->
+<!-- $$ -->
+
+<!-- Hence -->
+
+<!-- \begin{equation} -->
+<!-- \begin{split} -->
+<!-- \frac{\partial g}{\partial t} \bigr|_{t = 0} &= \frac{\partial}{\partial x} \left( \frac{\partial f}{\partial t} \right) \bigr|_{t = 0} \\ -->
+<!-- &= -2 \frac{m}{s^2} \frac{k(0)}{x_0} -->
+<!-- \end{split} -->
+<!-- \end{equation} -->
+
+<!-- And the integral resolves to -->
+
+<!-- \begin{equation} -->
+<!-- \begin{split} -->
+<!-- \int_{\ln(x_0) - m t}^{\ln(x_0) + m t} \frac{\partial g}{\partial t} \bigr|_{t = 0} \: d \omega &= -2 k(0) \frac{m}{s^2} \int_{\ln(x_0) - m t}^{\ln(x_0) + m t} \frac{1}{x_0} \: d x_0 \\ -->
+<!-- &= 2 k(0) \frac{m}{s^2} (e^{mt} - e^{-mt}) \\ -->
+<!-- &= 4 k(0) \frac{m}{s^2} \sinh(m t) -->
+<!-- \end{split} -->
+<!-- \label{eq:dAlembInt} -->
+<!-- \end{equation} -->
+
+<!-- Where $\sinh()$ is the hyperbolic sine function. -->
+
+<!-- \begin{equation} -->
+<!-- \begin{split} -->
+<!-- g_0(\ln(x_0) + mt) &= - \frac{2}{s^2} k(0) e^{-\ln(x_0) - m t} + \frac{2}{s^2} c(0) \\ -->
+<!-- g_0(\ln(x_0) - mt) &= - \frac{2}{s^2} k(0) e^{-\ln(x_0) + m t} + \frac{2}{s^2} c(0) \\ -->
+<!-- \rightarrow g_0(\ln(x_0) + mt) + g_0(\ln(x_0) - mt) &= -\frac{2}{s^2} \left[ \frac{k(0)}{x_0} (e^{m \tau} + e^{-m \tau}) - 2 c(0) \right] \\ -->
+<!-- &= -\frac{2}{s^2} \left( \cosh(m \tau) - c(0) \right) -->
+<!-- \end{split} -->
+<!-- \end{equation} -->
+
+<!-- Where $\cosh()$ is the hyperbolic cosine function. Substituting this and equation \ref{eq:dAlembInt} into D'Alambert's formula (equation \ref{eq:dAlemb}) results in the following general solution for $g(\ln(x), t)$. -->
+
+## The value maximizing (or minimizing, or break-even) inferential
+
+Having deduced the functional form of $k(\tau)$, the necessary condition in equation \ref{eq:necCond} can be more clearly expressed as follows.
+
+\begin{equation}
+\frac{\partial^2 f}{\partial x^2} x^2 = e^{-m \tau}
+\label{eq:necCond2}
+\end{equation}
+
+An expression for the extremal inferential can be deduced by solving the Black Scholes equation (\ref{eq:bsEq}) at the necessary condition as follows.
+
+\begin{equation}
+m f^* - m \frac{\partial f^*}{\partial x} x = \frac{\partial f}{\partial t} + \frac{s^2}{2} e^{-m \tau}
+\end{equation}
+
+Introducing the following change of variables,
+
+\begin{equation}
+f &= e^{-m \tau} y
+\end{equation}
+
+The previous equation reduces to
+
+\begin{equation}
+\begin{split}
+m e^{-m \tau} y - m e^{-m \tau} \frac{\partial y}{ \partial x} x &= e^{-m \tau} \frac{\partial y}{ \partial t} + m e^{-m \tau} y + \frac{s^2}{2} e^{-m \tau} \\
+-m \frac{\partial y}{ \partial x} x &= \frac{\partial y}{\partial t} + \frac{s^2}{2} \\
+\frac{\partial y}{\partial t} + m \frac{\partial y}{ \partial \ln(x)} &= -\frac{s^2}{2}
+\end{split}
+\end{equation}
+
+Factoring out operations on the left-hand side, this can be rewritten as follows.
+
+\begin{equation}
+\left( \frac{\partial}{\partial t} + m \frac{\partial}{ \partial \ln(x)} \right) y = -\frac{s^2}{2}
+\label{eq:linWav2}
+\end{equation}
+
+Multiplying through by $(\partial / \partial t - m \partial / \partial \ln(x))$ then results in the following wave equation.
+
+\begin{equation}
+\begin{split}
+\left( \frac{\partial}{\partial t} - m \frac{\partial}{ \partial \ln(x)} \right) \left( \frac{\partial}{\partial t} + m \frac{\partial}{ \partial \ln(x)} \right) y &= -\left( \frac{\partial}{\partial t} - m \frac{\partial}{ \partial \ln(x)} \right) \frac{s^2}{2} \\
+\frac{\partial^2 y}{\partial t^2} - m^2 \frac{\partial^2 y}{ \partial \ln(x)^2} &= 0
+\end{split}
+\end{equation}
+
+The solution to this equation can be found by again using D'Alembert's formula.
+
+\begin{equation}
+y(\ln(x(0)), T) = \frac{1}{2} ( y_0(\ln(x(0)) + m T) + y_0(\ln(x(0)) - m T)) + \frac{1}{2 m} \int_{\ln(x(0)) - m T}^{\ln(x(0)) + m T} \frac{\partial y}{\partial t} \: d \omega
+\end{equation}
+
+By equation \ref{eq:linWav2}, the integral in this equation can be rewritten as follows.
+
+\begin{equation}
+\begin{split}
+\frac{1}{2 m} \int_{\ln(x(0)) - m T}^{\ln(x(0)) + m T} \frac{\partial y}{\partial t} \: d \omega &= -\frac{1}{2 m} \int_{\ln(x(0)) - m T}^{\ln(x(0)) + m T} \left( m \frac{\partial y}{\partial \ln(x)} + \frac{s^2}{2} \right) \: d \omega \\
+&= -\frac{1}{2} (y_0(\ln(x(0)) + m T) - y_0^*(\ln(x(0)) - m T)) - \frac{s^2}{2} T
+\end{split}
+\end{equation}
+
+Substituting back into D'Alambert's formula and simplifying,
+
+\begin{equation}
+y(\ln(x(0)), T) = y_0(\ln(x(0)) - m T) - \frac{s^2}{2} T
+\end{equation}
+
+To resolve the function $y_0$, first note that equation \ref{eq:dfdx} can be simplified now that the form of $k(\tau)$ is known (equation \ref{eq:kTau}).
+
+\begin{equation}
+\frac{\partial f}{\partial x} = \frac{2}{s^2} c - \frac{e^{-m \tau}}{x}
+\label{eq:dfdxB}
+\end{equation}
+
+If $f$ has the form in equation \ref{eq:ov}, then $0 \leq \partial f / \partial x \leq 1$, which requires $c = s^2 / 2$; and so the equation further simplifies to
+
+\begin{equation}
+\frac{\partial f}{\partial x} = 1 - \frac{e^{-m \tau}}{x}
+\label{eq:dfdxB}
+\end{equation}
+
+The integral of this equation with respect to $x$ (equation \ref{eq:fStar}) likewise simplifies to
+
+\begin{equation}
+f = x(t) - e^{-m \tau} \ln(x(t)) + b(t)
+\end{equation}
+
+Therefore,
+
+\begin{equation}
+\begin{split}
+y_0 &= [e^{m \tau} f(x(t), t) ]_{t = 0} \\
+&= e^{m T} f(x(0), 0) \\
+&= e^{m T} (x(0) - e^{-m T} \ln(x(0)) + b(0))
+\end{split}
+\end{equation}
+
+And
+
+\begin{equation}
+\begin{split}
+y_0(\ln(x(0)) - m T) = e^{m T} (e^{-m T} x(0) - e^{-m T} (\ln(x(0)) - m T) + b(0))
+\end{split}
+\end{equation}
+
+And so D'Alambert's formula resolves to
+
+\begin{equation}
+y(\ln(x(0)), T) = e^{m T} (e^{-m T} x(0) - e^{-m T} (\ln(x(0)) - m T) + b(0)) - \frac{s^2}{2} T
+\end{equation}
+
+An expression for the extremal inferential, up to translation, then follows by substituting $e^{m T} f(x(0), T)$ for $y(\ln(x(0)), T)$ and simplifying.
+
+\begin{equation}
+\begin{split}
+e^{m T} f(x(0), T) &= e^{m T} (e^{-m T} x(0) - e^{-m T} (\ln(x(0)) - m T) + b(0)) - \frac{s^2}{2} T \\
+f^*(x(0), T) &= e^{-m T} x(0) - e^{-m T} (\ln(x(0)) - m T) + b(0) - e^{-m T} \frac{s^2}{2} T \\
+&= e^{-m T} \left( x(0) - \ln(x(0)) + \left(m - \frac{s^2}{2} \right) T \right) + b(0)
+\end{split}
+\end{equation}
+
+Or
+
+\begin{equation}
+f^*(x(0), T) = e^{-m T} ( x(0) - s \sqrt{T} \delta - s^2 T) + b(0)
+\end{equation}
+
+In market contexts, i.e. where $x$ is the value of a financial security and $m$ equals the risk free rate $r$, this is the extremal financial derivative. More specifically, it is the functional form of the financial derivative that maximizes the value $f(T) - f(0)$ when $\zeta > 1$, minimizes it when $\zeta < 1$, and breaks even when $\zeta = 1$.
+
+## Optimal ROV "steering"
+
+The precise functional form of the extremal inferential, derived above, is of less practical interest in real options contexts, which tend to be focused on one inferential in particular---the ROV formula (equation \ref{eq:...}) or some close variation thereof. However, the necessary condition, as expressed in equation \ref{eq:dfdxB}, is of interest because it allows practitioners to solve for parameter values that maximize ROV.
+
+
+
+Note also that the outlay $K$ is missing from the optimized expression. If the user prefers to include $K$, then simply substitute the change of variables $x = \zeta K$ in the derivation above. This has the effect of replacing $x$ with $x/K$.
+
+\begin{equation}
+f^*(x(t), \tau, K, m, s, b(0)) = e^{-m \tau} y(\ln(x(t) / K), \tau) = e^{-m \tau} (E(x(t) / K) - E(\ln(x(t) / K) + b(0))
+\end{equation}
+
+In the financial context, $\zeta$ is known as the "moneyness" of the option. When $\zeta > 1$, the (call) option is said to be "in the money", while for $\zeta < 1$, the option is said to be "out of the money". At $\zeta = 1$, the option is said to be "at the money".
+
+From equation \ref{eq:sufCond2}, it is straightforward to see that introduction of this change of variables slightly complicates the sufficient condition, such that $f^*$ represents that maximum for in the money real options, but the minimum for out of the money real options, and the break even point for at the money real options.
+
+[The discount rate $r$ drops out?]
+<!-- To determine the constant $b(0)$, differentiate this equation with respect to time. -->
+
+<!-- \begin{equation} -->
+<!-- \frac{\partial f}{\partial t} = m f - m x_0 + e^{-m \tau} \left(m - \frac{s^2}{2} \right) -->
+<!-- \end{equation} -->
+
+<!-- Now substitute the functional form of $k(\tau)$ (equation \ref{eq:kTau}) into equation \ref{eq:dfdt} and rearrange as follows. -->
+
+<!-- \begin{equation} -->
+<!-- \frac{\partial f}{\partial t} = -e^{-m \tau} \left( m \ln(x) - \left( m - \frac{s^2}{2} \right)  \right) + 2 \frac{m}{s^2} b(t) -->
+<!-- \end{equation} -->
+
+<!-- Setting the last two equations equal and solving for $b(\tau)$ gives -->
+
+<!-- \begin{equation} -->
+<!-- b(\tau) = -\frac{s^2}{2} e^{-m \tau} \left( m - \frac{s^2}{2} \right) \tau -->
+<!-- \end{equation} -->
+
+<!-- Therefore, $b(0) = 0$, and the optimal option value equation reduces to -->
+
+<!-- \begin{equation} -->
+<!-- f(\ln(x), \tau) = e^{-m \tau} (E(x_{\tau}) - E(\ln(x_{\tau}))) -->
+<!-- \end{equation} -->
+
+## Optimal control
+
+Having derived the functional form of $k(\tau)$, the derivative $\partial f / \partial x$ (equation \ref{eq:dAlembSol}) may be more clearly expressed as follows.
+
+\begin{equation}
+\frac{\partial f^*}{\partial x} = \frac{2}{s^2} c - \frac{e^{-m \tau}}{x(0)}
+\end{equation}
+
+Since $0 < \Phi(\delta + s \sqrt{\tau}) < 1$, it must be that $c = s^2 / 2$, and so the equation simplifies further to
+
+\begin{equation}
+\Phi(\delta + s \sqrt{\tau}) = 1 - \frac{e^{-m \tau}}{x(0)}
+\end{equation}
+
+Or
+
+\begin{equation}
+\Phi(\delta + s \sqrt{\tau}) = 1 - K \frac{e^{-m \tau}}{x(0)}
+\end{equation}
+
+If the change of variables $x = \zeta K$ is made in the derivation.
+
+The variables appearing in this equation are typically assumed to be exogenously given. However, it may be that project donors and/or managers have some discretion over the time horizon, or the size of the outlay $K$. In such cases, this equation may be solved for the optimal value of the control variable.
+
+```{r}
+
+# Define functions
+#---------------------------------------------------------------------------
+# Extremal ROV
+rovExt <- function(x0, K, m, s, tau, const = 0){
+  # EmonT <- x0 / K * exp(m * tau)
+  # ElMonT <- log(x0 / K) + (m - s^2 / 2) * tau
+  # rovExt <- EmonT - exp(-m * tau) * ElMonT + const
+  term1 <- x0 / K
+  term2 <- log(x0 / K) - (m - s^2 / 2) * tau
+  rovExt <- exp(-m * tau) * (term1 - term2) + const
+  return(rovExt)
+}
+#---------------------------------------------------------------------------
+# ROV
+OVfun <- function(x0, K, m, s, tau, r, output = "OV"){
+  
+  d2 <- (log(x0 / K) + (m - s^2 / 2) * tau) / (s * sqrt(tau))
+  d1 <- d2 + s * sqrt(tau)
+  Phi1 <- pnorm(d1)
+  Phi2 <- pnorm(d2)
+  
+  OV <- exp((m - r) * tau) * x0 * Phi1 - exp(-r * tau) * K * Phi2
+
+    if(output == "OV"){
+    out <- OV
+  }
+  
+  if(output == "Phi2"){
+    out <- Phi2
+  }
+  
+  if(output == "Phi1"){
+    out <- Phi1
+  }
+
+  return(out)
+}
+#----------------------------------------------------------------------------
+# Geometric Brownian movement
+gbmFun <- function(tau = 40, m = 0.001, s = 0.003, x0 = 1,
+                   randVec = NULL, seed = NULL) {
+  if(is.null(randVec)){
+      if(!is.null(seed)){set.seed(seed)}
+    randVec <- rnorm(tau)
+    }
+  epsilon <- randVec
+  lx <- c(); lx[1] <- log(x0)
+  drift <- (m - s * s / 2)
+  for(t in 2:tau){
+      dBt <-  s * epsilon[t]
+      lx[t] <- lx[t - 1] + drift + dBt
+  }
+  x <- exp(lx)
+  return(x)
+}
+# m <- 0.001
+# s <- 0.003
+# tau <- 400
+# x0 <- 1
+# x <- gbmFun(tau, m, s, x0, randVec = NULL)
+# df_plot <- data.frame(t = 1:tau, x)
+# gg <- ggplot(df_plot, aes(x = t, y = x))
+# gg <- gg + geom_line()
+# acf(diff(log(x)))
+# hist(diff(log(x)))
+# shapiro.test(diff(log(x)))
+
+#=============================================================================
+#=============================================================================
+#=============================================================================
+
+Tt <- 44 # Quarterly time step
+r <- 0.006
+cv <- 1.7
+m <- r#0.008
+s <- cv * m * sqrt(Tt)
+x0 <- 1
+K <- x0 * 0.7
+#K <- seq(0.5, 2, length.out = 40)
+
+xVec <- gbmFun(Tt, m, s, x0, randVec = NULL, seed = NULL)
+xVec[1] <- x0
+tVec <- 1:Tt
+tauVec <- Tt:1
+# Get const first
+rovStar <- rovExt(xVec[1], K, m, s, tauVec[1], const = 0)
+rov <- OVfun(xVec[1], K, m, s, tauVec[1], r, output = "OV")
+#const <- exp(m * tau) * (rov - rovStar)
+const <- rov - rovStar
+rovStar <- rovExt(xVec, K, m, s, tauVec, const)
+rov <- OVfun(xVec, K, m, s, tauVec, r, output = "OV")
+#---------------------------------------------------------------------------
+# Plot
+df_plot <- data.frame(t = 1:Tt, ROV = rov,
+                      ROVstar = rovStar,
+                      Underlying = xVec)
+colnames(df_plot)[3] <- "Extremal ROV"
+df_plot <- df_plot %>% gather(Type, Value, ROV:Underlying)
+gg <- ggplot(df_plot, aes(x = t, y = Value, group = Type, color = Type))
+gg <- gg + geom_line(lwd = 1)
+gg <- gg + theme(axis.text.x = element_blank(),
+                 axis.title.x = element_blank())
+gg1 <- gg
+
+df_plot2 <- data.frame(t = 1:Tt, Moneyness = xVec / K)
+gg <- ggplot(df_plot2, aes(x = t, y = Moneyness))
+gg <- gg + geom_line(lwd = 1)
+gg <- gg + geom_hline(yintercept = 1, color = "red")
+gg2 <- gg
+
+gg1 + gg2 + plot_layout(ncol = 1, heights = c(1, 1 / 2))
+
+const
+
+```
+
+# Discussion and conclusion
+
+In this article I have derived the necessary and sufficient conditions for improvement maximizing real option value. When the the outlay $K$ is preserved in the derivation through a change of variables, the solution is improvement maximizing for in the money options, improvement minimizing for out of the money options, and a break-even point for at the money options. I have also shown how a functional form for the improvement maximizing/minimizing real option value may be extracted from the derivation; and how an equation for optimal control (without the redundant degree of freedom) also follows.
+
+[The benefits of knowing the improvement maximizing option value are straightforward.] In the case of out of the money options, ROV practitioners may also be interested in the improvement minimizing option value since this represents the worst case scenario...   The optimized functional form $f^*$ is considerably simpler than the unoptimized form. This opens the possibility of greatly simplifying the calculations involved in the assessment of large portfolios of real options.  back-of-the-envelope calculations.
+
+<!-- # ```{r} -->
+
+<!-- OVfun <- function(X0, K, tau, mm, s, r, output = "OV"){ -->
+
+<!--   d2 <- (log(X0 / K) + (mm - s^2 / 2) * tau) / (s * sqrt(tau)) -->
+<!--   d1 <- d2 + s * sqrt(tau) -->
+<!--   N1 <- pnorm(d1) -->
+<!--   N2 <- pnorm(d2) -->
+
+<!--   OV <- exp((mm - r) * tau) * X0 * N1 - exp(-r * tau) * K * N2 -->
+
+<!--     if(output == "OV"){ -->
+<!--     out <- OV -->
+<!--   } -->
+
+<!--   if(output == "N2"){ -->
+<!--     out <- N2 -->
+<!--   } -->
+
+<!--   if(output == "N1"){ -->
+<!--     out <- N1 -->
+<!--   } -->
+
+<!--   return(out) -->
+<!-- } -->
+<!-- #------------------------ -->
+<!-- OVstar <- function(X0, K = NULL, tau, mm, s, r){ -->
+<!--   if(is.null(K)){ -->
+<!--     fStar <- exp(-r * tau) * (exp(mm * tau) * X0 - log(X0) - (mm - s^2 / 2) * tau) -->
+<!--   }else{ -->
+<!--     fStar <- exp(-r * tau) * (exp(mm * tau) * X0 / K - log(X0 / K) - (mm - s^2 / 2) * tau) -->
+<!--   } -->
+
+<!--   return(fStar) -->
+<!-- } -->
+<!-- #------------------------ -->
+
+<!-- slackFun <- function(K, X0, tau, mm, s){ -->
+<!--   d1 <- (log(X0 / K) + (mm + s^2 / 2) * tau) / (s * sqrt(tau)) -->
+<!--   N1 <- pnorm(d1) -->
+<!--   slack <- N1 - 1 + exp(- mm * tau) / X0 -->
+<!--   return(slack) -->
+<!-- } -->
+
+<!-- #------------------------ -->
+
+<!-- slackFun2 <- function(K, X0, s, tau, mm, r){ -->
+<!--   fStar <- OVstar(X0, K, tau, mm, s, r) -->
+<!--   f <- OVfun(X0, K, tau, mm, s, r, output = "OV") -->
+<!--   slack <- fStar - f -->
+<!--   return(slack) -->
+
+<!-- } -->
+
+<!-- # slackFun2 <- function(K, X0, s, tau, mm){ -->
+<!-- #   d1 <- (log(X0 / K) + (mm + s^2 / 2) * tau) / (s * sqrt(tau)) -->
+<!-- #   n1 <- dnorm(d1) -->
+<!-- #   #d2fdx2 <- n1 / (X0 * s * sqrt(tau)) -->
+<!-- #   slack <- X0 * n1 - s * sqrt(tau) * exp(- mm * tau) -->
+<!-- #   return(slack) -->
+<!-- # } -->
+
+<!-- #======================================================================= -->
+<!-- library(tidyverse) -->
+<!-- #mm <- 0.01 -->
+<!-- r <- mm -->
+<!-- mm <- seq(0.005, 0.1, length.out = 50) -->
+<!-- cv <- 5 -->
+<!-- s <- cv * mm -->
+<!-- X0 <- 10 -->
+<!-- tau <- 35 -->
+<!-- #tau <- seq(5, 50, 1) -->
+<!-- #K <- seq(0.1, 2, length.out = 20) * X0 -->
+<!-- K <- X0 * .90 -->
+<!-- # Kguess <- c(K[1], K[length(K)]) -->
+<!-- # Kstar <- rootSolve::uniroot.all(slackFun, interval = Kguess, X0 = X0, tau = tau, mm = mm, s = s) -->
+<!-- # Kstar2 <- rootSolve::uniroot.all(slackFun2, interval = Kguess, X0 = X0, s = s, tau = tau, mm = mm, r = r) -->
+
+<!-- fStar <- OVstar(X0, K, tau, mm, s, r) -->
+<!-- f <- OVfun(X0, K, tau, mm, s, r, output = "OV") -->
+<!-- d <- fStar - f -->
+
+<!-- df_plot <- data.frame(d, mm) -->
+<!-- gg <- ggplot(df_plot, aes(x = mm, y = d)) -->
+<!-- gg <- gg + geom_line(lwd = 1) -->
+<!-- gg <- gg + geom_hline(yintercept = 0, color = "red") -->
+<!-- #gg <- gg + geom_hline(yintercept = Astar, color = "green") -->
+<!-- # gg <- gg + geom_vline(xintercept = Kstar2, color = "green") -->
+<!-- # gg <- gg + geom_vline(xintercept = X0, color = "orange") -->
+<!-- gg -->
+
+
+<!-- # fT <- OVfun(X0, K, tau = tau, mm, s, output = "OV") -->
+<!-- # f0 <- OVfun(X0, K, tau = 0, mm, s, output = "OV") -->
+<!-- # A <- fT - f0 -->
+<!-- # #Astar <- (exp(-mm * tau) - 1) * log(X0) - exp(-mm * tau) * (mm - s^2 / 2) * tau -->
+<!-- # #max(A) / Astar -->
+<!-- #  -->
+<!-- # df_plot <- data.frame(A, K) -->
+<!-- # gg <- ggplot(df_plot, aes(x = K, y = A)) -->
+<!-- # gg <- gg + geom_line(lwd = 1) -->
+<!-- # gg <- gg + geom_hline(yintercept = 0, color = "red") -->
+<!-- # #gg <- gg + geom_hline(yintercept = Astar, color = "green") -->
+<!-- # gg <- gg + geom_vline(xintercept = Kstar, color = "green") -->
+<!-- # gg -->
+
+
+<!-- slackFun(K, X0, s, tau, mm) -->
+<!-- slackFun2(K, X0, s, tau, mm) -->
+<!-- ``` -->
+
+# References {-}
+<!-- References {#references .unnumbered} -->
+
+<div id="refs"></div>
+
+\pagebreak
+
+# Appendix: Derivation of the ROV formula through straightforward integration
+
+<!-- If $u$ is a random variable with lognormal density function $f(u)$, then the definite integral of $u f(u)$ over a specific domain $(\underline{u}, \bar{u})$, where $\underline{u}$ is the lower and $\bar{u}$ the upper bound of the domain (and where at least one of the bounds is finite), may be expressed as follows. -->
+
+<!-- \begin{equation} -->
+<!-- \int_{\underline{u}}^{\bar{u}} u f(u) \: du = \mu_u (\Phi(\bar{z}) - \Phi(\underline{z})) -->
+<!-- \label{eq:hullsResult} -->
+<!-- \end{equation} -->
+
+<!-- Where $\mu_u$ is the mean of $u$, defined -->
+
+<!-- \begin{equation} -->
+<!-- \mu_u = e^{m_u + s_u^2 / 2} \:\:;\:\:\: m_u = E(\ln(u)), \:\: s_u^2 = Var(\ln(u)) -->
+<!-- \end{equation} -->
+
+<!-- And where $\Phi(t)$ is the standard normal cumulative distribution function, defined -->
+
+<!-- \begin{equation} -->
+<!-- \Phi(\tau) = \frac{1}{\sqrt{2 \pi}} \int_{-\infty}^{\tau} e^{-t^2 / 2} \: dt -->
+<!-- \end{equation} -->
+
+<!-- And where $\bar{z}$ and $\underline{z}$ are defined as follows. -->
+
+<!-- \begin{equation} -->
+<!-- \begin{split} -->
+<!-- \bar{z} &= \frac{\ln(\bar{u}) - m_u}{s_u} - s_u \\ -->
+<!-- \underline{z} &= \frac{\ln(\underline{u}) - m_u}{s_u} - s_u -->
+<!-- \end{split} -->
+<!-- \end{equation} -->
+
+<!-- _Proof:_ -->
+
+By definition,
+
+\begin{equation}
+E[max(x_T - K, 0)] = \int_{K}^{\infty} (x_T - K) f(x_T) \: dx_T
+\end{equation}
+
+Where $f(x_T)$ is the probability density function of the random variable $x_T$. If $\ln(x_T)$ is normally distributed with mean $\nu$ and variance $\omega^2$, then 
+
+\begin{equation}
+E[x_T] = e^{\nu + \frac{\omega^2}{2}}
+\label{eq:muXT}
+\end{equation}
+
+and
+
+\begin{equation}
+f(x_T) = \frac{1}{x_T \omega} \phi \left(\frac{\ln(x_T) - \nu}{\omega} \right)
+\end{equation}
+
+Where $\phi()$ stands for the standard normal probability density function.
+
+Now, introducing a change of variables,
+
+\begin{equation}
+u = \frac{\ln(x_T) - \nu}{\omega}
+\label{eq:subThis1}
+\end{equation}
+
+Such that
+
+\begin{equation}
+\frac{du}{d x_T} = \frac{1}{x_T \omega}\: \rightarrow \: d x_T = x_T \omega du
+\label{eq:subThis2}
+\end{equation}
+
+The definition at the top can be rewritten as follows.
+
+\begin{equation}
+\begin{split}
+E[max(x_T - K, 0)] &= \int_{\frac{\ln(K) - \nu}{\omega}}^{\infty} (e^{u \omega + \nu} - K) \phi(u) \: du \\
+&= \int_{\frac{\ln(K) - \nu}{\omega}}^{\infty} e^{u \omega + \nu} \phi(u) \: du - K \int_{\frac{\ln(K) - \nu}{\omega}}^{\infty} \phi(u) \: du \\
+&= \int_{\frac{\ln(K) - \nu}{\omega}}^{\infty} e^{u \omega + \nu} \phi(u) \: du - K \Phi \left(-\frac{\ln(K) - \nu}{\omega} \right)
+\end{split}
+\end{equation}
+
+Where $\Phi()$ is the standard normal cumulative distribution function.
+<!-- \begin{equation} -->
+<!-- \begin{split} -->
+<!-- \phi(u) &= \frac{1}{\sqrt{2 \pi}} e^{-\frac{u^2}{2}} \\ -->
+<!-- \Phi(a) &= \frac{1}{\sqrt{2 \pi}} \int_{-infty}^{a} e^{-\frac{u^2}{2}} \: du -->
+<!-- \end{split} -->
+<!-- \end{equation} -->
+
+The remaining integral on the right-hand side of the definition resolves as follows.
+
+\begin{equation}
+\begin{split}
+\int_{\frac{\ln(K) - \nu}{\omega}}^{\infty} e^{u \omega + \nu} \phi(u) \: du &= \frac{1}{\sqrt{2 \pi}} \int_{\frac{\ln(K) - \nu}{\omega}}^{\infty} e^{u \omega + \nu -\frac{u^2}{2}} \: du \\
+&= \frac{1}{\sqrt{2 \pi}} \int_{\frac{\ln(K) - \nu}{\omega}}^{\infty} e^{-1 / 2 (u^2 - 2 u \omega - 2 \nu)} \: du \\
+&= \frac{1}{\sqrt{2 \pi}} \int_{\frac{\ln(K) - \nu}{\omega}}^{\infty} e^{-\frac{(u^2 - \omega)^2}{2} + \nu + \frac{\omega^2}{2}} \: du \\
+&= \frac{1}{\sqrt{2 \pi}} \int_{\frac{\ln(K) - \nu}{\omega}}^{\infty} e^{-\frac{(u^2 - \omega)^2}{2}} e^{\nu + \frac{\omega^2}{2}} \: du \\
+&= e^{\nu + \frac{\omega^2}{2}} \frac{1}{\sqrt{2 \pi}} \int_{\frac{\ln(K) - \nu}{\omega}}^{\infty} e^{-\frac{(u^2 - \omega)^2}{2}} \: du \\
+&= \frac{E[x_T]}{\sqrt{2 \pi}} \int_{\frac{\ln(K) - \nu}{\omega}}^{\infty} e^{-\frac{(u^2 - \omega)^2}{2}} \: du
+\end{split}
+\end{equation}
+
+
+<!-- \begin{equation} -->
+<!-- \begin{split} -->
+<!-- &= \frac{E[x_T]}{\sqrt{2 \pi}} \int_{\frac{\ln(K) - \nu}{\omega}}^{\infty} e^{-\frac{(u^2 - \omega)^2}{2}} \: du \\ -->
+<!-- &= E[x_T] \Phi(- \frac{\ln(K) - \nu}{\omega} + \omega) -->
+<!-- \end{split} -->
+<!-- \end{equation} -->
+
+The definition may now be rewritten as follows.
+
+\begin{equation}
+E[max(x_T - K, 0)] = E[x_T] \Phi \left(- \frac{\ln(K) - \nu}{\omega} + \omega \right) - K \Phi \left(-\frac{\ln(K) - \nu}{\omega} \right)
+\end{equation}
+
+Note that \ref{eq:muXT} can be rearranged into an expression for $\nu$.
+
+\begin{equation}
+\nu = \ln(E[x_T]) - \omega^2 / 2
+\label{eq:subThis1}
+\end{equation}
+
+Substituting this for $\nu$ in the definition gives
+
+\begin{equation}
+E[max(x_T - K, 0)] = E[x_T] \Phi \left(\frac{\ln(E[x_T] / K) + \omega^2 / 2}{\omega} \right) - K \Phi \left(-\frac{\ln(E[x_T] / K) - \omega^2 / 2}{\omega} \right)
+\end{equation}
+
+If $x_t$ $(0 < t \leq T)$ follows a geometric Brownian motion, then $E[x_T] \bigr|_t = x_t e^{m \tau}$, and the variance of $\ln(x_t)$ is $s^2 \tau$, where $\tau = T - t$. (See Hull [-@hull9thEdition] for details.)
+
+Substituting these expressions for $E[x_T]$ and $\omega$, the definition can again be rewritten as follows.
+
+\begin{equation}
+E[max(x_T - K, 0)]\bigr|_t = x_t e^{m \tau} \Phi \left(\frac{\ln(x_t / K) + (m + s^2 / 2) \tau}{s \sqrt{\tau}} \right) - K \Phi \left(\frac{\ln(x_t / K) + (m - s^2 / 2) \tau}{s \sqrt{\tau}} \right)
+\end{equation}
+
+Or, more compactly,
+
+\begin{equation}
+E[max(x_T - K, 0)]\bigr|_t = x_t e^{m \tau} \Phi(\delta + s \sqrt{\tau}) - K \Phi(\delta)
+\end{equation}
+
+Where
+
+\begin{equation}
+\delta = \frac{\ln(x_t / K) + (m - s^2 / 2) \tau}{s \sqrt{\tau}}
+\end{equation}
+
+Multiplying this by the discount factor then gives
+
+\begin{equation}
+e^{-r \tau} E[max(x_T - K, 0)]\bigr|_t = x_t e^{(m - r) \tau} \Phi(\delta + s \sqrt{\tau}) - e^{-r \tau} K \Phi(\delta)
+\end{equation}
+
+This is the ROV formula in equation \ref{eq:rov}.
+
+$\blacksquare$
+
+For a reference, see the appendix to chapter 15 in Hull [-@hull9thEdition].
+
+<!-- [Many practitioners might find the real options approach compelling on a conceptual level, but then come to view it as a "black box" [inviting misuse/abuse] once they delve into the computational details. [In Figure \ref one sees how easy it is for a naive/unscrupulous practitioner to unwittingly/deliberately inflate the value of a worthless project through misspecification of the uncertainty parameter $s$.]] -->
+
+<!-- In any modeling exercise there is always a tradeoff between realism and expediency. In academic contexts, there is a premium on the realism end of the spectrum, while in practical contexts, the premium is on expediency.  -->
+
+<!-- Much of this complexity can be traced back to an entrenched perception that the assumption of lognormal NPV is unrealistic. Trigeorgis calls numerical methods the "bitter pill" that all serious ROV practitioners must face [].  real option value  two sources in particular: 1) An attempt at adapting the efficient market hypothesis from financial contexts to far-from-market real options contexts; and 2) a rejection of the lognormal assumption,  insistence on sophisticated stochastic models. -->
+
+<!-- Here i show there is no need to adapt the no-arbitrage argument to real options contexts. -->
+<!-- bitter pill...partly rooted in/Inherited from financial contexts, where the analogous assumption of lognormal security returns is widely considered to be naive.    -->
+
+<!-- "En pro:" -->
+
+<!-- McGrath and MacMillan [@mcgrath2000assessing] -->
+
+<!-- Newton, Paxson, and Widdicks [@newton2004real] -->
+
+<!-- Trigeorgis [@trigeorgis1993real] -->
+
+<!-- Hayes and Garvin [@hayes1982managing] -->
+
+<!-- Doctor, Newton, and Pearson [@doctor2001managing] -->
+
+<!-- "En contra:" -->
+
+<!-- Block [@block2007real] -->
+
+<!-- Horn, Kjærland, Molnár, and Steen [@horn2015use] -->
+
+<!-- Triantis [@triantis2005realizing] -->
+
+<!-- Driouchi and Bennett [@driouchi2012real] -->
+
+<!-- I then show how the necessary condition can be used to optimize real option time horizons, risk levels, expected returns, or exercise costs, when these are discretionary. I close with a brief discussion of how the derived expression for maximum option value can simplify real option funding decision-making processes. A potentially  Real option value is often promoted as an appealing alternative to the conventional net present value approach to project appraisal on the premise that real option value may be positive even when net present value is negative. Here I demonstrate that real option value must always be less than net present value.  The maximum option value formula is valid for compound options too, or any function satisfying the Black-Scholes differential equation. -->
+
+
+<!-- brief defense of the lognormal assumption.... Interest in real options is increasingly academic, perhaps partly because of these reasons. The present paper may [alleviate this by presenting a simpler model. By considering the envelope, we consider the very best case scenario; and it's much simpler to manipulate, evaluate] -->
+
+<!-- * Risk free assumption not necessary -->
+
+<!-- * Motivating context in agricultural research for development, far from market...but wide applicability. -->
