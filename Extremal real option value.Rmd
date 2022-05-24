@@ -443,7 +443,7 @@ f^*(\zeta(t), t) \bigr_{t = \hat{t}} = e^{-m \tau} ( E[x(T)]\bigr|_{\hat{t}} - E
 
 ## Sufficient condition
 
-Equation \ref{eq:fStar} is an extremal function which may either maximize, minimize, or leave stationary the action (equation \ref{eq:action}). To determine which, he sufficient condition is
+The extremal function in equation \ref{eq:fStar} satisfies the necessary condition; but it maximizes the action (equation \ref{eq:action}) only if the following sufficient condition is also met.
 
 \begin{equation}
 A(\zeta) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(\zeta + \psi(\zeta)) \bigr|_{\mathcal{L} = \mathcal{L}^*} < 0
@@ -463,10 +463,10 @@ The optimized lagrangian $\mathcal{L}^*$ is found by evaluating the unoptimized 
 \mathcal{L}^* = \frac{\partial f}{\partial \zeta} \dot{\zeta} + \frac{\partial f}{\partial t} + k(t)
 \end{equation}
 
-The left-hand side of the sufficient condition thus resolves to
+The sufficient condition thus resolves to
 
 \begin{equation}
-A(\zeta) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(\zeta + \psi(\zeta)) \bigr|_{\mathcal{L} = \mathcal{L}^*} = \int_0^{\tau} \frac{\partial f}{\partial u} (\dot{\zeta} + \dot{\psi}) - \frac{\partial f}{\partial \zeta} \dot{\zeta} + \frac{\partial f}{\partial t} \bigr|_{\zeta + \psi} - \frac{\partial f}{\partial t} \bigr|_{\zeta} \:dt \:\:;\:\:\: u = \zeta + \psi
+A(\zeta) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(\zeta + \psi(\zeta)) \bigr|_{\mathcal{L} = \mathcal{L}^*} = \int_0^{\tau} \frac{\partial f^*}{\partial u} (\dot{\zeta} + \dot{\psi}) - \frac{\partial f^*}{\partial \zeta} \dot{\zeta} + \frac{\partial f^*}{\partial t} \bigr|_{\zeta + \psi} - \frac{\partial f^*}{\partial t} \bigr|_{\zeta} \:dt \:\:;\:\:\: u = \zeta + \psi
 \end{equation}
 
 But note that
@@ -483,132 +483,43 @@ But note that
 So that the previous equation reduces to
 
 \begin{equation}
-A(\zeta) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(\zeta + \psi(\zeta)) \bigr|_{\mathcal{L} = \mathcal{L}^*} = \int_0^T \frac{\partial f}{\partial t} \bigr|_{\zeta + \psi} - \frac{\partial f}{\partial t} \bigr|_{\zeta} \:dt
+A(\zeta) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(\zeta + \psi(\zeta)) \bigr|_{\mathcal{L} = \mathcal{L}^*} = \int_0^T \frac{\partial f^*}{\partial t} \bigr|_{\zeta + \psi} - \frac{\partial f^*}{\partial t} \bigr|_{\zeta} \:dt
+\label{eq:sufCondRaw}
+\end{equation}
+
+A tractable expression for $\partial f^* / \partial t$ can be obtained by once more evaluating the Black-Scholes PDE at the necessary condition, this time also using the expressions obtained for $f^*$ and $\partial f^* / \partial \zeta$.
+
+\begin{equation}
+\begin{split}
+m \left(e^{-m \tau} \left[e^{m \tau} K \zeta - \ln(\zeta) - \left(m - \frac{s^2}{2} \right) \tau + b(T) \right] - \zeta \left( K - \frac{e^{-m \tau}}{\zeta} \right) \right) &= \frac{\partial f^*}{\partial t} + \frac{s^2}{2} e^{-m \tau} \\
+-m e^{-m \tau} \left[ \ln(\zeta) + \left( m - \frac{s^2}{2} \right) \left( \tau - \frac{1}{m} \right) - b(T) \right] &= \frac{\partial f}{\partial t}
+\end{split}
+\end{equation}
+<!-- -m e^{-m \tau} \left[ \ln(\zeta) + \left(m - \frac{s^2}{2} \right) \tau - b(T) \right] + e^{-m \tau} \left( m - \frac{s^2}{2} &= \frac{\partial f^*}{\partial t} \\ -->
+
+It follows, then, that
+
+\begin{equation}
+A(\zeta) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(\zeta + \psi(\zeta)) \bigr|_{\mathcal{L} = \mathcal{L}^*} = -m e^{-m \tau} \int_0^T \ln(\zeta + \psi(\zeta)) - \ln(\zeta) \:dt < 0
 \label{eq:sufCond}
 \end{equation}
 
-An expression for $\partial f / \partial t$ can be obtained by once more evaluating the Black-Scholes PDE at the necessary condition, 
+The extremal function in equation \ref{eq:fStar} therefore maximizes the action.
 
+# Discussion
 
+Optimal scaling of impacts... x = K^alpha ; 0 < alpha < 1
 
-
-
-
-
-
-
-
-
-To evaluate this, note that the necessary condition (equation \ref{eq:necCond}) can be rearranged as follows
-
-\begin{equation}
-\frac{s^2 x}{2} \frac{\partial^2 f}{\partial x^2} = \frac{k(t)}{x}
-\end{equation}
-
-Integrating both sides with respect to $\ln(x)$ then gives
-
-\begin{equation}
-\frac{s^2}{2} \frac{\partial f}{\partial x} = -\frac{k(t)}{x} + c(t)
-\label{eq:dfdx}
-\end{equation}
-
-Where $c(t)$ is a constant of integration with respect to $x$, but might be some function of time. Integrating again with respect to $x$ gives
-
-\begin{equation}
-\frac{s^2}{2} f = -k(t) \ln(x) + c(t) x + b(t)
-\label{eq:fStar}
-\end{equation}
-
-Where $b(t)$ is another constant of integration with respect to $x$. Subtracting equation \ref{eq:} from equation \ref{eq:} then gives
-
-\begin{equation}
-\frac{s^2}{2} \left( f - \frac{\partial f}{\partial x} x \right) = -k(t) (\ln(x) - 1) + b(t)
-\end{equation}
-
-Recalling equation \ref{eq:} , the left-hand side can be rewritten as follows.
-
-\begin{equation}
-\frac{s^2}{2 m} \left( \frac{\partial f}{\partial t} + k(t) \right) = -k(t) (\ln(x) - 1) + b(t)
-\end{equation}
-
-This can then be solved for $\partial f / \partial t$ as follows.
-
-\begin{equation}
-\frac{\partial f}{\partial t} = m \left[ -k(t) \left( \frac{2}{s^2} (\ln(x) - 1) + 1 \right) + \frac{2}{s^2} b(t) \right]
-\label{eq:dfdt}
-\end{equation}
-
-Equation \ref{eq:sufCond} thus evaluates to
-
-\begin{equation}
-\int_0^{\tau} 2 \frac{m}{s^2} [-k(t) (\ln(x + \psi(x)) -  \ln(x)) ] \:dt
-\label{eq:sufCond2}
-\end{equation}
-
-Which is negative if $k(t) > 0$. The sufficient condition for maximum action is thus satisfied so long as $k(t) > 0$. 
-By which it follows that $k(\tau) > 0$. The sufficiency condition for maximum action (equation \ref{eq:sufCond}) is therefore fulfilled.
-
-<!-- The integral in this expression can be resolved by differentiating equation \ref{eq:dfdt} with respect to $x$ and substituting $\tau$ for $t$.  -->
-
-<!-- \begin{equation} -->
-<!-- \frac{\partial}{\partial x} \left( \frac{\partial f}{\partial t} \right) = -2 \frac{m}{s^2} \frac{k(t)}{x} -->
-<!-- \end{equation} -->
-
-<!-- Recall that, by Clairut's theorem, -->
-
-<!-- $$ -->
-<!-- \frac{\partial}{\partial x} \left( \frac{\partial f}{\partial t} \right) = \frac{\partial}{\partial t} \left( \frac{\partial f}{\partial x} \right) -->
-<!-- $$ -->
-
-<!-- Hence -->
-
-<!-- \begin{equation} -->
-<!-- \begin{split} -->
-<!-- \frac{\partial g}{\partial t} \bigr|_{t = 0} &= \frac{\partial}{\partial x} \left( \frac{\partial f}{\partial t} \right) \bigr|_{t = 0} \\ -->
-<!-- &= -2 \frac{m}{s^2} \frac{k(0)}{x_0} -->
-<!-- \end{split} -->
-<!-- \end{equation} -->
-
-<!-- And the integral resolves to -->
-
-<!-- \begin{equation} -->
-<!-- \begin{split} -->
-<!-- \int_{\ln(x_0) - m t}^{\ln(x_0) + m t} \frac{\partial g}{\partial t} \bigr|_{t = 0} \: d \omega &= -2 k(0) \frac{m}{s^2} \int_{\ln(x_0) - m t}^{\ln(x_0) + m t} \frac{1}{x_0} \: d x_0 \\ -->
-<!-- &= 2 k(0) \frac{m}{s^2} (e^{mt} - e^{-mt}) \\ -->
-<!-- &= 4 k(0) \frac{m}{s^2} \sinh(m t) -->
-<!-- \end{split} -->
-<!-- \label{eq:dAlembInt} -->
-<!-- \end{equation} -->
-
-<!-- Where $\sinh()$ is the hyperbolic sine function. -->
-
-<!-- \begin{equation} -->
-<!-- \begin{split} -->
-<!-- g_0(\ln(x_0) + mt) &= - \frac{2}{s^2} k(0) e^{-\ln(x_0) - m t} + \frac{2}{s^2} c(0) \\ -->
-<!-- g_0(\ln(x_0) - mt) &= - \frac{2}{s^2} k(0) e^{-\ln(x_0) + m t} + \frac{2}{s^2} c(0) \\ -->
-<!-- \rightarrow g_0(\ln(x_0) + mt) + g_0(\ln(x_0) - mt) &= -\frac{2}{s^2} \left[ \frac{k(0)}{x_0} (e^{m \tau} + e^{-m \tau}) - 2 c(0) \right] \\ -->
-<!-- &= -\frac{2}{s^2} \left( \cosh(m \tau) - c(0) \right) -->
-<!-- \end{split} -->
-<!-- \end{equation} -->
-
-<!-- Where $\cosh()$ is the hyperbolic cosine function. Substituting this and equation \ref{eq:dAlembInt} into D'Alambert's formula (equation \ref{eq:dAlemb}) results in the following general solution for $g(\ln(x), t)$. -->
-
-## The value maximizing (or minimizing, or break-even) inferential
-
-Having deduced the functional form of $k(\tau)$, the necessary condition in equation \ref{eq:necCond} can be more clearly expressed as follows.
-
-\begin{equation}
-\frac{\partial^2 f}{\partial x^2} x^2 = e^{-m \tau}
-\label{eq:necCond2}
-\end{equation}
-
-
-<!-- Or -->
-<!-- \begin{equation} -->
-<!-- f^*(x(0), T) = e^{-m T} ( x(0) - s \sqrt{T} \delta - s^2 T) + b(0) -->
-<!-- \end{equation} -->
 
 In market contexts, i.e. where $x$ is the value of a financial security and $m$ equals the risk free rate $r$, this is the extremal financial derivative. More specifically, it is the functional form of the financial derivative that maximizes the value $f(T) - f(0)$ when $\zeta > 1$, minimizes it when $\zeta < 1$, and breaks even when $\zeta = 1$.
+
+
+
+
+
+
+
+
 
 ## Optimal ROV "steering"
 
