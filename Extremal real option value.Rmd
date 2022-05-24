@@ -78,9 +78,9 @@ Mathematically, the absence of any empirical or theoretical premise for risk-neu
 <!-- ## Low adoption of the ROV approach -->
 <!-- Despite a flood of academic enthusiasm and interest in ROV following Myers' initial insight (see, for example, Hayes and Garvin [-@hayes1982managing], McGrath and MacMillan [-@mcgrath2000assessing], Doctor, Newton, and Pearson [-@doctor2001managing], and Newton, Paxson, and Widdicks [-@newton2004real]), adoption of the real options approach by real world decision makers remains relatively low [@horn2015use; @triantis2005realizing; @driouchi2012real]. ROV critics and proponents alike attribute the tepid reception among practitioners to the formal complexity of evaluating and explaining ROV as compared to the default NPV approach [@triantis2005realizing]. -->
 
-# Maximum ROV improvement
+<!-- # Maximum ROV improvement -->
 
-Henceforth, let $ROV$ be denoted by $f$, and let $x_t$ be denoted $x(t)$. A practitioner may be interested in maximizing the improvement in ROV over the project timeline. That is, they may want to maximize
+<!-- Henceforth, let $ROV$ be denoted by $f$, and let $x_t$ be denoted $x(t)$. A practitioner may be interested in maximizing the improvement in ROV over the project timeline. That is, they may want to maximize -->
 
 \begin{equation}
 f(T) - f(0)
@@ -93,7 +93,7 @@ A(x) = \int^{T}_0 \frac{df}{dt} \:dt
 \label{eq:action}
 \end{equation}
 
-In physics, such equations are called the "action". Letting $\mathcal{L} = \frac{df}{dt}$, the necessary condition for maximum (or minimum, or stationary) action is called Euler's condition:
+In physics, this is called the "action". Letting $\mathcal{L} = \frac{df}{dt}$, the necessary condition for maximum (or minimum, or stationary) action is called Euler's condition:
 
 \begin{equation}
 \frac{\partial \mathcal{L}}{\partial x} = \frac{d}{dt} \left( \frac{\partial \mathcal{L}}{\partial \dot{x}} \right)
@@ -144,7 +144,9 @@ Where $\kappa$ is some constant with respect to the interval $\Delta t$.
 The second insight is about resolving the value of $\kappa$. In financial markets, the no-arbitrage rule requires that $\kappa = r$. In the absence of the no-arbitrage rule, however, the $r$ in the Black-Scholes PDE must be replaced by $\kappa$. Moreover, solving this non-market version of the Black-Scholes PDE at the boundary condition $f(T) = \max(x(T) - K, 0)$ and comparing it to equation \ref{eq:rov} reveals that $\kappa = m$. In the absence of the no-arbitrage rule, then, the Black-Scholes PDE must default to
 
 \begin{equation}
-\left( f - \frac{\partial f}{\partial x} x \right) m = \frac{\partial f}{\partial t} + \frac{1}{2} \frac{\partial^2 f}{\partial x^2} s^2 x^2 \end{equation}
+\left( f - \frac{\partial f}{\partial x} x \right) m = \frac{\partial f}{\partial t} + \frac{1}{2} \frac{\partial^2 f}{\partial x^2} s^2 x^2
+\label{eq:bsPDEffmkt}
+\end{equation}
 
 This is the relevant version of the Black-Scholes PDE in far-from-market ROV contexts.
 
@@ -157,99 +159,345 @@ The total derivative in equation \ref{eq:bsInsight1} can be expressed as follows
 \label{eq:lagrang}
 \end{equation}
 
-This is a lagrangian $\mathcal{L}$ that can be fed into the Euler condition (equation \ref{eq:eulCond}). The left-hand side of the Euler condition thus becomes
+This is a lagrangian $\mathcal{L}$ that can be fed into the Euler condition (equation \ref{eq:eulCond}). Before doing so, the change of variables $x \rightarrow \zeta$ is introduced, where $\zeta = x/K$ and $K$ is a constant. In financial derivatives, $K$ is a benchmark price such as the exercise price in the case of call options, or the contract price in the case of forward contracts. Financial derivatives with $\zeta > 1$ are said to be "in the money", while derivatives with $\zeta < 1$ are "out of the money", and derivatives with $\zeta = 1$ are "at the money". The ratio $\zeta$ itself is referred to as the "moneyness".
 
 \begin{equation}
-\frac{\partial \mathcal{L}}{\partial x} = \frac{\partial^2 f}{\partial x^2} \dot{x} + \frac{\partial}{\partial x} \left( \frac{\partial f}{\partial t} \right) + \frac{s^2}{2} \frac{\partial}{\partial x} \left(x^2 \frac{\partial^2 f}{\partial x^2} \right) 
+\mathcal{L} = \frac{\partial f}{\partial \zeta} \dot{\zeta} + \frac{\partial f}{\partial t} + \frac{s^2 \zeta^2}{2} \frac{\partial^2 f}{\partial \zeta^2} \:\:;\:\:\: \dot{\zeta} = \frac{d\zeta}{dt}
+\label{eq:lagrang}
+\end{equation}
+
+The left-hand side of the Euler condition thus becomes
+
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial \zeta} = \frac{\partial^2 f}{\partial \zeta^2} \dot{\zeta} + \frac{\partial}{\partial \zeta} \left( \frac{\partial f}{\partial t} \right) + \frac{s^2}{2} \frac{\partial}{\partial \zeta} \left(\zeta^2 \frac{\partial^2 f}{\partial \zeta^2} \right)
+\label{eq:dLd\zeta}
 \end{equation}
 
 The right-hand side of the Euler condition, meanwhile, resolves as follows.
 
 \begin{equation}
-\frac{\partial \mathcal{L}}{\partial \dot{x}} = \frac{\partial f}{\partial x}
+\frac{\partial \mathcal{L}}{\partial \dot{\zeta}} = \frac{\partial f}{\partial \zeta}
 \end{equation}
 
 And so
 
 \begin{equation}
-\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{x}}\right) = \frac{\partial }{\partial t} \left( \frac{\partial f}{\partial x} \right) + \frac{\partial^2 f}{\partial x^2} \dot{x}
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\zeta}}\right) = \frac{\partial }{\partial t} \left( \frac{\partial f}{\partial \zeta} \right) + \frac{\partial^2 f}{\partial \zeta^2} \dot{\zeta}
 \end{equation}
 
 Equating the two sides of the Euler condition and simplifying,
 
 \begin{equation}
 \begin{split}
-\frac{\partial^2 f}{\partial x^2} \dot{x} + \frac{\partial}{\partial x} \left( \frac{\partial f}{\partial t} \right) + \frac{s^2}{2} \frac{\partial}{\partial x} \left(x^2 \frac{\partial^2 f}{\partial x^2} \right) = \frac{\partial }{\partial t} \left( \frac{\partial f}{\partial x} \right) + \frac{\partial^2 f}{\partial x^2} \dot{x} \\
-\frac{\partial}{\partial x} \left( \frac{\partial f}{\partial t} \right) + \frac{s^2}{2} \frac{\partial}{\partial x} \left(x^2 \frac{\partial^2 f}{\partial x^2} \right) = \frac{\partial }{\partial t} \left( \frac{\partial f}{\partial x} \right)
+\frac{\partial^2 f}{\partial \zeta^2} \dot{\zeta} + \frac{\partial}{\partial \zeta} \left( \frac{\partial f}{\partial t} \right) + \frac{s^2}{2} \frac{\partial}{\partial \zeta} \left(\zeta^2 \frac{\partial^2 f}{\partial \zeta^2} \right) &= \frac{\partial }{\partial t} \left( \frac{\partial f}{\partial \zeta} \right) + \frac{\partial^2 f}{\partial \zeta^2} \dot{\zeta} \\
+\frac{\partial}{\partial \zeta} \left( \frac{\partial f}{\partial t} \right) + \frac{s^2}{2} \frac{\partial}{\partial \zeta} \left(\zeta^2 \frac{\partial^2 f}{\partial \zeta^2} \right) &= \frac{\partial }{\partial t} \left( \frac{\partial f}{\partial \zeta} \right)
 \end{split}
 \end{equation}
 
 By Clairut's theorem,
 
 \begin{equation}
-\frac{\partial}{\partial t} \left( \frac{\partial f}{\partial x} \right) = \frac{\partial}{\partial x} \left( \frac{\partial f}{\partial t} \right)
+\frac{\partial}{\partial t} \left( \frac{\partial f}{\partial \zeta} \right) = \frac{\partial}{\partial \zeta} \left( \frac{\partial f}{\partial t} \right)
 \end{equation}
 
 And so the Euler condition further simplifies to
 
 \begin{equation}
-\frac{s^2}{2} \frac{\partial}{\partial x} \left(x^2 \frac{\partial^2 f}{\partial x^2} \right) = 0
+\frac{s^2}{2} \frac{\partial}{\partial \zeta} \left(\zeta^2 \frac{\partial^2 f}{\partial \zeta^2} \right) = 0
+\label{eq:necCond0}
 \end{equation}
 
-Which can be integrated with respect to $x$ as follows,
+Which can be integrated with respect to $\zeta$ as follows,
 
 \begin{equation}
-\frac{s^2 x^2}{2} \frac{\partial^2 f}{\partial x^2} = k(t)
-\label{eq:necCond}
+\frac{s^2 \zeta^2}{2} \frac{\partial^2 f}{\partial \zeta^2} = k(t)
+\label{eq:necCond1}
 \end{equation}
 
-Where $k(t)$ is constant with respect to $x$ but may be some function of time.
+Where $k(t)$ is constant with respect to $\zeta$, but may be some function of time. To determine $k(t)$, first rearrange and integrate the necessary condition one more time, this time with respect to $\ln(\zeta)$,
+
+\begin{equation}
+\begin{split}
+\frac{s^2}{2} \int \zeta \frac{\partial^2 f}{\partial \zeta^2} \: d\ln(\zeta) &= k(t) \int \frac{1}{\zeta} \: d\ln(\zeta) \\
+\frac{s^2}{2} \frac{\partial f}{\partial \zeta} &= -\frac{k(t)}{\zeta} + c(t)
+\end{split}
+\end{equation}
+
+And rearrange into an expression for $\partial f / \partial \zeta$ evaluated at some time $\hat{t}$.
+
+\begin{equation}
+\frac{\partial f}{\partial \zeta}\bigr_{t = \hat{t}} = \frac{2}{s^2} \left( -\frac{k(\hat{t})}{\zeta(\hat{t})} + c(\hat{t}) \right)
+\label{eq:dfdzRaw}
+\end{equation}
+
+Now, differentiating the Black-Scholes PDE (equation \ref{eq:bsPDEffmkt}) with respect to $\zeta$,
+
+\begin{equation}
+ -m \frac{\partial^2 f}{\partial \zeta^2} \zeta = \frac{\partial }{\partial \zeta}\left( \frac{\partial f}{\partial t} \right) + \frac{s^2}{2} \frac{\partial}{\partial \zeta} \left(\frac{\partial^2 f}{\partial \zeta^2} \right)
+\end{equation}
+
+Note that this implies that the left-hand side of the Euler condition (equation \ref{eq:dLd\zeta}) can be rewritten as follows.
+
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial \zeta} = \frac{\partial^2 f}{\partial \zeta^2} \dot{\zeta} - m \frac{\partial^2 f}{\partial \zeta^2}
+\end{equation}
+
+So that the Euler condition then reduces to
+
+\begin{equation}
+\begin{split}
+\frac{\partial}{\partial t} \left( \frac{\partial f}{\partial \zeta} \right) + m \frac{\partial^2 f}{\partial \zeta^2} \zeta &= 0 \\
+\frac{\partial}{\partial t} \left( \frac{\partial f}{\partial \zeta} \right) + m \frac{\partial}{\partial \ln(\zeta)} \left( \frac{\partial f}{\partial \zeta} \right) &= 0
+\end{split}
+\end{equation}
+
+Factoring out operations and substituting $T - \tau$ for $t$,
+
+\begin{equation}
+\left( \frac{\partial}{\partial \tau} - m \frac{\partial}{\partial \ln(\zeta)}   \right) \frac{\partial f}{\partial \zeta} = 0
+\label{eq:linWav}
+\end{equation}
+
+Multiplying through by $(\partial / \partial \tau + m \partial / \partial \ln(\zeta))$,
+
+\begin{equation}
+\begin{split}
+\left( \frac{\partial}{\partial \tau} + m \frac{\partial}{\partial \ln(\zeta)} \right) \left( \frac{\partial}{\partial \tau} - m \frac{\partial}{\partial \ln(\zeta)}   \right) \frac{\partial f}{\partial \zeta} &= 0 \\
+\frac{\partial^2}{\partial \tau^2} \left( \frac{\partial f}{\partial \zeta} \right) - m^2 \frac{\partial^2}{\partial \ln(\zeta)^2}  \left( \frac{\partial f}{\partial \zeta} \right) &= 0
+\end{split}
+\label{eq:wavEq1}
+\end{equation}
+
+This is a one dimensional wave equation, soluble using d'Alambert's formula. Letting
+
+\begin{equation}
+g(\ln(\zeta), \tau) = \frac{\partial f}{\partial \zeta} \bigr_{t = \hat{t}} \\
+g_0 = \frac{\partial f}{\partial \zeta} \bigr_{t = \hat{T}},
+\end{equation}
+
+Then
+
+\begin{equation}
+g(\ln(\zeta), \tau) = \frac{1}{2} ( g_0(\ln(\zeta + m \tau) + g_0(\ln(\zeta - m \tau)) + \frac{1}{2 m} \int_{\ln(\zeta) - m \tau}^{\ln(\zeta) + m \tau} \frac{\partial g}{\partial \tau} \bigr|_{\tau = 0} \: d \omega
+\label{eq:dAlemb}
+\end{equation}
+
+By invoking equation \ref{eq:linWav}, the integral can be rewritten
+
+\begin{equation}
+\begin{split}
+\frac{1}{2 m} \int_{\ln(\zeta) - m \tau}^{\ln(\zeta) + m \tau} \frac{\partial g}{\partial \tau} \bigr|_{\tau = 0} \: d \omega &= \frac{1}{2} \int_{\ln(\zeta) - m \tau}^{\ln(\zeta) + m \tau} \frac{\partial g}{\partial \ln(\zeta)} \bigr|_{\tau = 0} \: d \omega \\
+&= \frac{1}{2} (g_0(\ln(\zeta) + m \tau) - g_0(\ln(\zeta) - m \tau))
+\end{split}
+\end{equation}
+
+Substituting this back into d'Alambert's formula and simplifying gives
+
+\begin{equation}
+g(\ln(\zeta), \tau) = g_0(\ln(\zeta) + m \tau)
+\end{equation}
+
+The function $g_0$ is determined by evaluating equation \ref{eq:dfdzRaw} at $\tau = 0$ (which implies $t = T$).
+
+\begin{equation}
+g_0 = \frac{\partial f}{\partial \zeta} \bigr|_{t = T} = \frac{2}{s^2} \left( - \frac{k(T)}{\zeta(T)} + c(T) \right)
+\end{equation}
+
+D'Alambert's formula thus resolves to
+
+\begin{equation}
+\frac{\partial f}{\partial \zeta} \bigr|_{t = \hat{t}} = \frac{2}{s^2} \left( -\frac{k(T)}{\zeta(\hat{t})} e^{-m \tau} + c(T) \right)
+\label{eq:dAlembSol}
+\end{equation}
+
+Setting this equal to equation \ref{eq:dfdzRaw} and solving for $k(\hat{t})$ then gives
+
+\begin{equation}
+k(\hat{t}) = k(T) e^{-m \tau} + \zeta(\hat{t})(c(T) - c(\hat{t}))
+\end{equation}
+
+Since $k(t)$ is only a function of $t$ and not of $\zeta$, then the second term in this equation must somehow vanish. Because $\zeta$ follows a geometric Brownian motion, $\zeta(\hat{t}) > 0$. Therefore, it must be that $c(\hat{t})$ is constant with respect to both $\zeta$ and $t$, such that $c(\hat{t}) = c(0)$. The expression for $k(\hat{t})$ thus reduces to
+
+\begin{equation}
+k(\hat{t}) = k(T) e^{-m \tau}
+\end{equation}
+
+Letting $k(T) = s^2 / 2$, the necessary condition (equation \ref{eq:necCond1}) thus reduces to
+
+\begin{equation}
+\frac{\partial^2 f}{\partial \zeta^2} = e^{-m \tau}
+\label{eq:necCond2}
+\end{equation}
+
+## A closed form expression for the extremal inferential
+
+Note also that $\partial f / \partial \zeta$ (equation \ref{eq:dfdzRaw}) may now be rewritten as follows.
+
+\begin{equation}
+\frac{\partial f}{\partial \zeta} \bigr_{t = \hat{t}} = \frac{2}{s^2} c - \frac{e^{-m \tau}}{\zeta(\hat{t})}
+\end{equation}
+
+The constant $c$ can be determined by considering the case where $f$ is a European call option, such that $\partial f / \partial \zeta = K \Phi(\delta + s \sqrt{\tau})$. Since $0 < \Phi(\delta + s \sqrt{\tau}) < 1$, then $c = K s^2 / 2$ (so long as $\zeta > e^{-m \tau}$). The expression for $\partial f / \partial \zeta$ may thus be rewritten more concisely still as follows.
+
+\begin{equation}
+\frac{\partial f}{\partial \zeta} \bigr_{t = \hat{t}} = K - \frac{e^{-m \tau}}{\zeta(\hat{t})}
+\end{equation}
+
+Integrating this with respect to $\zeta$ then gives a rudimentary expression for the extremal inferential $f^*$.
+
+\begin{equation}
+f^*(\zeta(t), t)\bigr_{t = \hat{t}} = K \zeta(\hat{t}) - e^{-m \tau} \ln(\zeta(\hat{t})) + b(\hat{t})
+\end{equation}
+
+Where $b(t)$ is constant with respect to $zeta$, but may be a function of $t$. It is possible to resolve $f^*$ further by evaluating the Black Scholes PDE (equation \ref{eq:bsPDEffmkt}) at the necessary condition as follows.
+
+\begin{equation}
+m f^* - m \frac{\partial f^*}{\partial \zeta} \zeta = \frac{\partial f^*}{\partial t} + \frac{s^2}{2} e^{-m \tau}
+\label{eq:fStarRaw}
+\end{equation}
+
+This extremal Black-Scholes PDE can then be further simplified by substituting $e^{-m \tau} y$ for $f^*$, and $T - \tau$ for $t$, as follows.
+
+\begin{equation}
+\begin{split}
+m e^{-m \tau} y - m e^{-m \tau} \frac{\partial y}{ \partial \zeta} \zeta &= -e^{-m \tau} \frac{\partial y}{ \partial \tau} + m e^{-m \tau} y + \frac{s^2}{2} e^{-m \tau} \\
+-m \frac{\partial y}{ \partial \zeta} \zeta &= -\frac{\partial y}{\partial \tau} + \frac{s^2}{2} \\
+\frac{\partial y}{\partial \tau} - m \frac{\partial y}{\partial \ln(\zeta)} &= \frac{s^2}{2}
+\end{split}
+\end{equation}
+
+Factoring out operations on the left-hand side, this can be rewritten as follows.
+
+\begin{equation}
+\left( \frac{\partial}{\partial \tau} - m \frac{\partial}{ \partial \ln(\zeta)} \right) y = \frac{s^2}{2}
+\label{eq:linWav2}
+\end{equation}
+
+Multiplying through by $(\partial / \partial \tau + m \partial / \partial \ln(\zeta))$,
+
+\begin{equation}
+\begin{split}
+\left( \frac{\partial}{\partial \tau} + m \frac{\partial}{ \partial \ln(\zeta)} \right) \left( \frac{\partial}{\partial \tau} - m \frac{\partial}{ \partial \ln(\zeta)} \right) y &= \left( \frac{\partial}{\partial \tau} + m \frac{\partial}{ \partial \ln(\zeta)} \right) \frac{s^2}{2} \\
+\frac{\partial^2 y}{\partial \tau^2} - m^2 \frac{\partial^2 y}{ \partial \ln(\zeta)^2} &= 0
+\end{split}
+\end{equation}
+
+This is another one dimensional wave equation soluble by d'Alambert's formula.
+
+\begin{equation}
+y(\ln(\zeta), \tau) = \frac{1}{2} ( y_0(\ln(\zeta) + m \tau) + y_0(\ln(\zeta) - m \tau)) + \frac{1}{2 m} \int_{\ln(\zeta) - m \tau}^{\ln(\zeta) + m \tau} \frac{\partial y}{\partial \tau} \bigr_{\tau = 0} \: d \omega
+\end{equation}
+
+By equation \ref{eq:linWav2}, the integral in this equation can be rewritten as follows.
+
+\begin{equation}
+\begin{split}
+\frac{1}{2 m} \int_{\ln(\zeta) - m \tau}^{\ln(\zeta) + m \tau} \frac{\partial y}{\partial \tau} \bigr_{\tau = 0} \: d \omega &= \frac{1}{2 m} \int_{\ln(\zeta) - m \tau}^{\ln(\zeta) + m \tau} \left( m \frac{\partial y}{\partial \ln(\zeta)} \bigr_{\tau = 0} + \frac{s^2}{2} \right) \: d \omega \\
+&= \frac{1}{2} (y_0(\ln(\zeta) + m \tau) - y_0(\ln(\zeta) - m \tau)) + \frac{s^2}{2} \tau
+\end{split}
+\end{equation}
+
+Substituting back into d'Alambert's formula and simplifying,
+
+\begin{equation}
+y(\ln(\zeta), \tau) = y_0(\ln(\zeta) + m \tau) + \frac{s^2}{2} \tau
+\end{equation}
+
+The function $y_0$ is determined by evaluating $f^*$ (equation \ref{eq:fStarRaw}) at $\tau = 0$ (which is the same as evaluating at $t = T$). That is,
+
+\begin{equation}
+\begin{split}
+y_0 = [e^{m \tau} f^*(\zeta(t), t)]_{\tau = 0} &= f^*(\zeta(T), T) \\
+&= K \zeta(T) - \ln(\zeta(T)) + b(T)
+\end{split}
+\end{equation}
+
+Hence,
+
+\begin{equation}
+y_0(\ln(\zeta) + m \tau) = K e^{m \tau} \zeta(\hat{t}) - \ln(\zeta(\hat{t})) - m \tau + b(T)
+\end{equation}
+
+And d'Alambert's formula resolves to
+
+\begin{equation}
+\begin{split}
+y(\ln(\zeta), \tau) &= K e^{m \tau} \zeta(\hat{t}) - \ln(\zeta(\hat{t})) - m \tau + b(T) + \frac{s^2}{2} \tau \\
+&= K e^{m \tau} \zeta(\hat{t}) - \left( \ln(\zeta(\hat{t})) + \left( m - \frac{s^2}{2} \right) \tau \right)+ b(T)
+\end{split}
+\end{equation}
+
+Substituting $e^{m \tau} f^*$ back in for $y$ and isolating $f^*$ then gives a clearer expression for the extremal inferential, defined up to translation.
+
+\begin{equation}
+f^*(\zeta(t), t) \bigr_{t = \hat{t}} = e^{-m \tau} \left( K e^{m \tau} \zeta(\hat{t}) - \left( \ln(\zeta(\hat{t})) + \left( m - \frac{s^2}{2} \right) \tau \right)+ b(T) \right)
+\label{eq:fStar}
+\end{equation}
+
+Note that this can also be written more compactly as follows.
+
+\begin{equation}
+f^*(\zeta(t), t) \bigr_{t = \hat{t}} = e^{-m \tau} ( E[x(T)]\bigr|_{\hat{t}} - E[\ln(x(T))]\bigr|_{\hat{t}} + \ln(K) + b(T) )
+\label{eq:fStarCompact}
+\end{equation}
 
 ## Sufficient condition
 
-Equation \ref{eq:necCond} is the necessary condition to maximize the action (equation \ref{eq:action}). The sufficient condition is
+Equation \ref{eq:fStar} is an extremal function which may either maximize, minimize, or leave stationary the action (equation \ref{eq:action}). To determine which, he sufficient condition is
 
 \begin{equation}
-A(x) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(x + \psi(x)) \bigr|_{\mathcal{L} = \mathcal{L}^*} < 0
+A(\zeta) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(\zeta + \psi(\zeta)) \bigr|_{\mathcal{L} = \mathcal{L}^*} < 0
 \end{equation}
 
-Where $\psi(x)$ is an infinitely differentiable bell shaped function that vanishes at the boundaries of $x(t)$.
+Where $\psi(\zeta)$ is an infinitely differentiable bell shaped function that vanishes at the boundaries of $\zeta(t)$.
 
 \begin{equation}
-\psi(x(0)) = \psi(x(T)) = 0
+\psi(\zeta(0)) = \psi(\zeta(T)) = 0
 \end{equation}
 
 (See Lebedev and Cloud [-@lebedev2003calculus] for details.)
 
-The optimized lagrangian $\mathcal{L}^*$ is found by evaluating the unoptimized lagrangian $\mathcal{L}$ in equation \ref{eq:lagrang} at the necessary condition in equation \ref{eq:necCond}, giving
+The optimized lagrangian $\mathcal{L}^*$ is found by evaluating the unoptimized lagrangian $\mathcal{L}$ (equation \ref{eq:lagrang}) at the necessary condition (equation \ref{eq:necCond}), giving
 
 \begin{equation}
-\mathcal{L}^* = \frac{\partial f}{\partial x} \dot{x} + \frac{\partial f}{\partial t} + k(t)
+\mathcal{L}^* = \frac{\partial f}{\partial \zeta} \dot{\zeta} + \frac{\partial f}{\partial t} + k(t)
 \end{equation}
 
 The left-hand side of the sufficient condition thus resolves to
 
 \begin{equation}
-A(x) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(x + \psi(x)) \bigr|_{\mathcal{L} = \mathcal{L}^*} = \int_0^{\tau} \frac{\partial f}{\partial u} (\dot{x} + \dot{\psi}) - \frac{\partial f}{\partial x} \dot{x} + \frac{\partial f}{\partial t} \bigr|_{x + \psi} - \frac{\partial f}{\partial t} \bigr|_{x} \:dt \:\:;\:\:\: u = x + \psi
+A(\zeta) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(\zeta + \psi(\zeta)) \bigr|_{\mathcal{L} = \mathcal{L}^*} = \int_0^{\tau} \frac{\partial f}{\partial u} (\dot{\zeta} + \dot{\psi}) - \frac{\partial f}{\partial \zeta} \dot{\zeta} + \frac{\partial f}{\partial t} \bigr|_{\zeta + \psi} - \frac{\partial f}{\partial t} \bigr|_{\zeta} \:dt \:\:;\:\:\: u = \zeta + \psi
 \end{equation}
 
 But note that
 
 \begin{equation}
 \begin{split}
-\frac{\partial f}{\partial x} \dot{x} &= \frac{\partial f}{\partial u} \frac{d u}{d x} \dot{x} \\
-&= \frac{\partial f}{\partial u} \left(1 + \frac{d \psi}{d x} \right) \dot{x} \\
-&= \frac{\partial f}{\partial u} \left(1 + \frac{\partial \psi}{\partial x} \right) \frac{dx}{dt} \\
-&= \frac{\partial f}{\partial u} (\dot{x} + \dot{\psi})
+\frac{\partial f}{\partial \zeta} \dot{\zeta} &= \frac{\partial f}{\partial u} \frac{d u}{d \zeta} \dot{\zeta} \\
+&= \frac{\partial f}{\partial u} \left(1 + \frac{d \psi}{d \zeta} \right) \dot{\zeta} \\
+&= \frac{\partial f}{\partial u} \left(1 + \frac{\partial \psi}{\partial \zeta} \right) \frac{d\zeta}{dt} \\
+&= \frac{\partial f}{\partial u} (\dot{\zeta} + \dot{\psi})
 \end{split}
 \end{equation}
 
 So that the previous equation reduces to
 
 \begin{equation}
-A(x) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(x + \psi(x)) \bigr|_{\mathcal{L} = \mathcal{L}^*} = \int_0^{\tau} \frac{\partial f}{\partial t} \bigr|_{x + \psi} - \frac{\partial f}{\partial t} \bigr|_{x} \:dt
+A(\zeta) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(\zeta + \psi(\zeta)) \bigr|_{\mathcal{L} = \mathcal{L}^*} = \int_0^T \frac{\partial f}{\partial t} \bigr|_{\zeta + \psi} - \frac{\partial f}{\partial t} \bigr|_{\zeta} \:dt
 \label{eq:sufCond}
 \end{equation}
+
+An expression for $\partial f / \partial t$ can be obtained by once more evaluating the Black-Scholes PDE at the necessary condition, 
+
+
+
+
+
+
+
+
+
+
 
 To evaluate this, note that the necessary condition (equation \ref{eq:necCond}) can be rearranged as follows
 
@@ -297,110 +545,7 @@ Equation \ref{eq:sufCond} thus evaluates to
 \label{eq:sufCond2}
 \end{equation}
 
-Which is negative if $k(t) > 0$. The sufficient condition for maximum action is thus satisfied so long as $k(t) > 0$. To determine $k(t)$, recall equation \ref{eq:} and note that by the Black Scholes insight (equation \ref{eq:}), it can be reduced to
-
-\ref{eq:bsrovpse}
-
-
-\begin{equation}
-\frac{\partial \mathcal{L}}{\partial x} = \frac{\partial^2 f}{\partial x^2} \dot{x} - m \frac{\partial^2 f}{\partial x^2}
-\end{equation}
-
-So that the Euler condition then becomes
-
-\begin{equation}
-\begin{split}
-\frac{\partial}{\partial t} \left( \frac{\partial f}{\partial x} \right) + m \frac{\partial^2 f}{\partial x^2} x= 0 \\
-\frac{\partial}{\partial t} \left( \frac{\partial f}{\partial x} \right) + m \frac{\partial}{\partial \ln(x)} \left( \frac{\partial f}{\partial x} \right) = 0
-\end{split}
-\end{equation}
-
-<!-- Substituting $\tau = T - t$ for $t$ and multiplying through by $-1$, -->
-
-<!-- \begin{equation} -->
-<!-- \frac{\partial}{\partial \tau} \left( \frac{\partial f}{\partial x} \right) - m \frac{\partial}{\partial \ln(x)} \left( \frac{\partial f}{\partial x} \right) = 0 -->
-<!-- \end{equation} -->
-
-Factoring out $\partial f / \partial x$ and substituting $\tau$ for $T - t$,
-
-\begin{equation}
-\left( \frac{\partial}{\partial \tau} - m \frac{\partial}{\partial \ln(x)}   \right) \frac{\partial f}{\partial x} = 0
-\label{eq:linWav}
-\end{equation}
-
-Multiplying through by $(\partial / \partial \tau + m \partial / \partial \ln(x))$,
-
-\begin{equation}
-\begin{split}
-\left( \frac{\partial}{\partial \tau} + m \frac{\partial}{\partial \ln(x)}   \right) \left( \frac{\partial}{\partial \tau} - m \frac{\partial}{\partial \ln(x)}   \right) \frac{\partial f}{\partial x} &= 0 \\
-\frac{\partial^2}{\partial \tau^2} \left( \frac{\partial f}{\partial x} \right) - m^2 \frac{\partial^2}{\partial \ln(x)^2}  \left( \frac{\partial f}{\partial x} \right) &= 0
-\end{split}
-\label{eq:wavEq1}
-\end{equation}
-
-Equation \ref{eq:wavEq1} is a wave equation that can be solved using D'Alambert's formula as follows. Letting $g(\ln(x), \tau) = \partial f / \partial x$ and $g_0 = g(\ln(x_0), 0)$,
-
-\begin{equation}
-g(\ln(x), \tau) = \frac{1}{2} ( g_0(\ln(x_0) + m \tau) + g_0(\ln(x_0) - m \tau)) + \frac{1}{2 m} \int_{\ln(x_0) - m \tau}^{\ln(x_0) + m \tau} \frac{\partial g}{\partial \tau} \bigr|_{\tau = 0} \: d \omega
-\label{eq:dAlemb}
-\end{equation}
-
-By equation \ref{eq:linWav}, the integral can be rewritten
-
-\begin{equation}
-\begin{split}
-\frac{1}{2 m} \int_{\ln(x_0) - m \tau}^{\ln(x_0) + m \tau} m \frac{\partial g}{\partial \ln(x)} \bigr|_{\tau = 0} \: d \omega &= \frac{1}{2} \int_{\ln(x_0) - m \tau}^{\ln(x_0) + m \tau} \frac{\partial g}{\partial \ln(x)} \bigr|_{\tau = 0} \: d \omega \\
-&= \frac{1}{2} (g_0(\ln(x_0) + m \tau) - g_0(\ln(x_0) - m \tau))
-\end{split}
-\end{equation}
-
-Substituting this back into D'Alambert's formula and simplifying,
-
-\begin{equation}
-g(\ln(x), \tau) = \frac{1}{2} g_0(\ln(x_0) + m \tau)
-\end{equation}
-
-The function $g_0$ is determined by evaluating equation \ref{eq:dfdx} at $\tau = 0$.
-
-\begin{equation}
-\begin{split}
-g_0 &= \frac{\partial f}{\partial x} \bigr|_{\tau = 0} = \frac{2}{s^2} \left( - \frac{k(0)}{x_0} + c(0) \right) \\
-&= -\frac{2}{s^2} k(0) e^{-\ln(x_0)} + \frac{2}{s^2} c(0)
-\end{split}
-\end{equation}
-
-D'Alambert's formula thus resolves to
-
-\begin{equation}
-g(\ln(x), \tau) = -\frac{2}{s^2} \left( \frac{k(0)}{x_0} e^{-m \tau} + c(0) \right)
-\label{eq:dAlembSol}
-\end{equation}
-
-Combining this with equation \ref{eq:dfdx} and solving for $k(\tau)$ then gives
-
-\begin{equation}
-k(\tau) = k(0) e^{-m \tau} + x_0(c(0) - c(\tau))
-\end{equation}
-
-Since $k(\tau)$ is only a function of $\tau$ and not of $x$, then it must be that $c(\tau)$ is a constant with respect to both $x$ and $\tau$, such that $c(\tau) = c(0)$. The expression for $k(\tau)$ thus reduces to
-
-\begin{equation}
-k(\tau) = k(0) e^{-m \tau}
-\end{equation}
-
-The constant $k(0)$ can be deduced by setting the right-hand side of this expression equal to the left-hand side of the necessary condition in equation \ref{eq:necCond}.
-
-\begin{equation}
-k(0) e^{-m \tau} = \frac{s^2 x^2}{2} \frac{\partial^2 f}{\partial x^2}
-\end{equation}
-
-Since $f$ is not itself scaled by a constant, then it must be that the constant $k(0)$ corresponds to $\frac{s^2}{2}$, and hence
-
-\begin{equation}
-k(\tau) = \frac{s^2}{2} e^{-m \tau}
-\label{eq:kTau}
-\end{equation}
-
+Which is negative if $k(t) > 0$. The sufficient condition for maximum action is thus satisfied so long as $k(t) > 0$. 
 By which it follows that $k(\tau) > 0$. The sufficiency condition for maximum action (equation \ref{eq:sufCond}) is therefore fulfilled.
 
 <!-- The integral in this expression can be resolved by differentiating equation \ref{eq:dfdt} with respect to $x$ and substituting $\tau$ for $t$.  -->
@@ -457,124 +602,11 @@ Having deduced the functional form of $k(\tau)$, the necessary condition in equa
 \label{eq:necCond2}
 \end{equation}
 
-An expression for the extremal inferential can be deduced by solving the Black Scholes equation (\ref{eq:bsEq}) at the necessary condition as follows.
 
-\begin{equation}
-m f^* - m \frac{\partial f^*}{\partial x} x = \frac{\partial f}{\partial t} + \frac{s^2}{2} e^{-m \tau}
-\end{equation}
-
-Introducing the following change of variables,
-
-\begin{equation}
-f &= e^{-m \tau} y
-\end{equation}
-
-The previous equation reduces to
-
-\begin{equation}
-\begin{split}
-m e^{-m \tau} y - m e^{-m \tau} \frac{\partial y}{ \partial x} x &= e^{-m \tau} \frac{\partial y}{ \partial t} + m e^{-m \tau} y + \frac{s^2}{2} e^{-m \tau} \\
--m \frac{\partial y}{ \partial x} x &= \frac{\partial y}{\partial t} + \frac{s^2}{2} \\
-\frac{\partial y}{\partial t} + m \frac{\partial y}{ \partial \ln(x)} &= -\frac{s^2}{2}
-\end{split}
-\end{equation}
-
-Factoring out operations on the left-hand side, this can be rewritten as follows.
-
-\begin{equation}
-\left( \frac{\partial}{\partial t} + m \frac{\partial}{ \partial \ln(x)} \right) y = -\frac{s^2}{2}
-\label{eq:linWav2}
-\end{equation}
-
-Multiplying through by $(\partial / \partial t - m \partial / \partial \ln(x))$ then results in the following wave equation.
-
-\begin{equation}
-\begin{split}
-\left( \frac{\partial}{\partial t} - m \frac{\partial}{ \partial \ln(x)} \right) \left( \frac{\partial}{\partial t} + m \frac{\partial}{ \partial \ln(x)} \right) y &= -\left( \frac{\partial}{\partial t} - m \frac{\partial}{ \partial \ln(x)} \right) \frac{s^2}{2} \\
-\frac{\partial^2 y}{\partial t^2} - m^2 \frac{\partial^2 y}{ \partial \ln(x)^2} &= 0
-\end{split}
-\end{equation}
-
-The solution to this equation can be found by again using D'Alembert's formula.
-
-\begin{equation}
-y(\ln(x(0)), T) = \frac{1}{2} ( y_0(\ln(x(0)) + m T) + y_0(\ln(x(0)) - m T)) + \frac{1}{2 m} \int_{\ln(x(0)) - m T}^{\ln(x(0)) + m T} \frac{\partial y}{\partial t} \: d \omega
-\end{equation}
-
-By equation \ref{eq:linWav2}, the integral in this equation can be rewritten as follows.
-
-\begin{equation}
-\begin{split}
-\frac{1}{2 m} \int_{\ln(x(0)) - m T}^{\ln(x(0)) + m T} \frac{\partial y}{\partial t} \: d \omega &= -\frac{1}{2 m} \int_{\ln(x(0)) - m T}^{\ln(x(0)) + m T} \left( m \frac{\partial y}{\partial \ln(x)} + \frac{s^2}{2} \right) \: d \omega \\
-&= -\frac{1}{2} (y_0(\ln(x(0)) + m T) - y_0^*(\ln(x(0)) - m T)) - \frac{s^2}{2} T
-\end{split}
-\end{equation}
-
-Substituting back into D'Alambert's formula and simplifying,
-
-\begin{equation}
-y(\ln(x(0)), T) = y_0(\ln(x(0)) - m T) - \frac{s^2}{2} T
-\end{equation}
-
-To resolve the function $y_0$, first note that equation \ref{eq:dfdx} can be simplified now that the form of $k(\tau)$ is known (equation \ref{eq:kTau}).
-
-\begin{equation}
-\frac{\partial f}{\partial x} = \frac{2}{s^2} c - \frac{e^{-m \tau}}{x}
-\label{eq:dfdxB}
-\end{equation}
-
-If $f$ has the form in equation \ref{eq:ov}, then $0 \leq \partial f / \partial x \leq 1$, which requires $c = s^2 / 2$; and so the equation further simplifies to
-
-\begin{equation}
-\frac{\partial f}{\partial x} = 1 - \frac{e^{-m \tau}}{x}
-\label{eq:dfdxB}
-\end{equation}
-
-The integral of this equation with respect to $x$ (equation \ref{eq:fStar}) likewise simplifies to
-
-\begin{equation}
-f = x(t) - e^{-m \tau} \ln(x(t)) + b(t)
-\end{equation}
-
-Therefore,
-
-\begin{equation}
-\begin{split}
-y_0 &= [e^{m \tau} f(x(t), t) ]_{t = 0} \\
-&= e^{m T} f(x(0), 0) \\
-&= e^{m T} (x(0) - e^{-m T} \ln(x(0)) + b(0))
-\end{split}
-\end{equation}
-
-And
-
-\begin{equation}
-\begin{split}
-y_0(\ln(x(0)) - m T) = e^{m T} (e^{-m T} x(0) - e^{-m T} (\ln(x(0)) - m T) + b(0))
-\end{split}
-\end{equation}
-
-And so D'Alambert's formula resolves to
-
-\begin{equation}
-y(\ln(x(0)), T) = e^{m T} (e^{-m T} x(0) - e^{-m T} (\ln(x(0)) - m T) + b(0)) - \frac{s^2}{2} T
-\end{equation}
-
-An expression for the extremal inferential, up to translation, then follows by substituting $e^{m T} f(x(0), T)$ for $y(\ln(x(0)), T)$ and simplifying.
-
-\begin{equation}
-\begin{split}
-e^{m T} f(x(0), T) &= e^{m T} (e^{-m T} x(0) - e^{-m T} (\ln(x(0)) - m T) + b(0)) - \frac{s^2}{2} T \\
-f^*(x(0), T) &= e^{-m T} x(0) - e^{-m T} (\ln(x(0)) - m T) + b(0) - e^{-m T} \frac{s^2}{2} T \\
-&= e^{-m T} \left( x(0) - \ln(x(0)) + \left(m - \frac{s^2}{2} \right) T \right) + b(0)
-\end{split}
-\end{equation}
-
-Or
-
-\begin{equation}
-f^*(x(0), T) = e^{-m T} ( x(0) - s \sqrt{T} \delta - s^2 T) + b(0)
-\end{equation}
+<!-- Or -->
+<!-- \begin{equation} -->
+<!-- f^*(x(0), T) = e^{-m T} ( x(0) - s \sqrt{T} \delta - s^2 T) + b(0) -->
+<!-- \end{equation} -->
 
 In market contexts, i.e. where $x$ is the value of a financial security and $m$ equals the risk free rate $r$, this is the extremal financial derivative. More specifically, it is the functional form of the financial derivative that maximizes the value $f(T) - f(0)$ when $\zeta > 1$, minimizes it when $\zeta < 1$, and breaks even when $\zeta = 1$.
 
@@ -649,12 +681,9 @@ The variables appearing in this equation are typically assumed to be exogenously
 #---------------------------------------------------------------------------
 # Extremal ROV
 rovExt <- function(x0, K, m, s, tau, const = 0){
-  # EmonT <- x0 / K * exp(m * tau)
-  # ElMonT <- log(x0 / K) + (m - s^2 / 2) * tau
-  # rovExt <- EmonT - exp(-m * tau) * ElMonT + const
-  term1 <- x0 / K
-  term2 <- log(x0 / K) - (m - s^2 / 2) * tau
-  rovExt <- exp(-m * tau) * (term1 - term2) + const
+  ExT <- x0 * exp(m * tau)
+  ElxT <- log(x0) + (m - s^2 / 2) * tau
+  rovExt <- exp(-m * tau) * (ExT - exp(-m * tau) * ElxT + log(K) + const)
   return(rovExt)
 }
 #---------------------------------------------------------------------------
@@ -719,10 +748,10 @@ gbmFun <- function(tau = 40, m = 0.001, s = 0.003, x0 = 1,
 Tt <- 44 # Quarterly time step
 r <- 0.006
 cv <- 1.7
-m <- r#0.008
+m <- 0.008
 s <- cv * m * sqrt(Tt)
 x0 <- 1
-K <- x0 * 0.7
+K <- x0 * 1.3
 #K <- seq(0.5, 2, length.out = 40)
 
 xVec <- gbmFun(Tt, m, s, x0, randVec = NULL, seed = NULL)
@@ -732,8 +761,8 @@ tauVec <- Tt:1
 # Get const first
 rovStar <- rovExt(xVec[1], K, m, s, tauVec[1], const = 0)
 rov <- OVfun(xVec[1], K, m, s, tauVec[1], r, output = "OV")
-#const <- exp(m * tau) * (rov - rovStar)
-const <- rov - rovStar
+const <- exp(m * Tt) * (rov - rovStar)
+#const <- rov - rovStar
 rovStar <- rovExt(xVec, K, m, s, tauVec, const)
 rov <- OVfun(xVec, K, m, s, tauVec, r, output = "OV")
 #---------------------------------------------------------------------------
