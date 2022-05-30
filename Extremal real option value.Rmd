@@ -1,5 +1,5 @@
 ---
-title: Extremal real option value in far-from-market contexts
+title: Extremal financial derivatives
 author:
   - name: Benjamin Schiek
     email: b.schiek@cgiar.com
@@ -8,7 +8,7 @@ address:
   - code: CIAT
     address: Alliance of Bioversity International and CIAT, Km 17 Recta Cali-Palmira, Valle del Cauca, Colombia, CP 763537
 abstract: |
-  I derive the necessary and sufficient conditions for optimal value of a real option with lognormally distributed net present value. The solution is optimal in the sense that it maximizes the option's improvement---that is to say, the increase in the option's value between inception and maturity. An expression for optimal net present option value, as well as equations by which to solve for optimizing parameter values, follow as corrollaries. The expression for optimized real option value is considerably simpler than the unoptimized expression, potentially facilitating real option funding decision workflows.
+  I derive a closed form expression, up to translation, for the extremal financial derivative. For in-the-money derivatives, the extremal financial derivative maximizes the difference between the value of the derivative at maturity and its starting value. For out-of-the-money derivatives, it minimizes this difference, while for at-the-money derivatives it breaks even. The expression for optimized real option value is considerably simpler than the unoptimized expression, potentially facilitating real option funding decision workflows.
 keywords: 
   - Real option value
   - Far-from-market
@@ -500,13 +500,20 @@ m \left(e^{-m \tau} \left[e^{m \tau} K \zeta - \ln(\zeta) - \left(m - \frac{s^2}
 It follows, then, that
 
 \begin{equation}
-A(\zeta) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(\zeta + \psi(\zeta)) \bigr|_{\mathcal{L} = \mathcal{L}^*} = -m e^{-m \tau} \int_0^T \ln(\zeta + \psi(\zeta)) - \ln(\zeta) \:dt < 0
+A(\zeta) \bigr|_{\mathcal{L} = \mathcal{L}^*} - A(\zeta + \psi(\zeta)) \bigr|_{\mathcal{L} = \mathcal{L}^*} = -m e^{-m \tau} \int_0^T \ln(\zeta + \psi(\zeta)) - \ln(\zeta) \:dt
+\begin{cases}
+< 0, & \text{if} \zeta > 0 \\
+\> 0, & \text{if} \zeta < 0 \\
+= 0, & \text{if} \zeta = 0
+\end{cases}
 \label{eq:sufCond}
 \end{equation}
 
-The extremal function in equation \ref{eq:fStar} therefore maximizes the action.
+The extremal function in equation \ref{eq:fStar} therefore maximizes the action for in-the-money inferentials ($\zeta > 1$), minimizes the action for out-of-the-money inferentials ($\zeta < 1$), and gives the break even point for at-the-money inferentials ($\zeta = 1$).
 
 # Discussion
+
+
 
 Optimal scaling of impacts... x = K^alpha ; 0 < alpha < 1
 
@@ -594,8 +601,17 @@ The variables appearing in this equation are typically assumed to be exogenously
 rovExt <- function(x0, K, m, s, tau, const = 0){
   ExT <- x0 * exp(m * tau)
   ElxT <- log(x0) + (m - s^2 / 2) * tau
-  rovExt <- exp(-m * tau) * (ExT - exp(-m * tau) * ElxT + log(K) + const)
+  rovExt <- exp(-m * tau) * (ExT - exp(-m * tau) * (ElxT - log(K)) + const)
   return(rovExt)
+}
+#---------------------------------------------------------------------------
+slackFn <- function(x0, K, m, s, tau){
+  d2 <- (log(x0 / K) + (m - s^2 / 2) * tau) / (s * sqrt(tau))
+  d1 <- d2 + s * sqrt(tau)
+  Phi1 <- pnorm(d1)
+  dfStardx <- 1 - exp(-m * tau) / x0
+  slack <- Phi1 - dfStardx
+  return(slack)
 }
 #---------------------------------------------------------------------------
 # ROV
@@ -662,13 +678,48 @@ cv <- 1.7
 m <- 0.008
 s <- cv * m * sqrt(Tt)
 x0 <- 1
-K <- x0 * 1.3
+K <- x0 * 0.6
 #K <- seq(0.5, 2, length.out = 40)
-
 xVec <- gbmFun(Tt, m, s, x0, randVec = NULL, seed = NULL)
 xVec[1] <- x0
 tVec <- 1:Tt
 tauVec <- Tt:1
+#---
+z0 <- x0 / K
+x0 <- seq(1, 200000, length.out = 10)
+slackFn(x0, K, m = m, s, tau = Tt)
+
+
+
+
+
+
+interval <- c(0.1, 5)
+mm <- m
+rootSolve::uniroot.all(slackFn,
+                       interval,
+                       lower = min(interval),
+                       upper = max(interval),
+                       K = K,
+                       m = m,
+                       s = s,
+                       tau = Tt)
+
+
+uniroot(slackFn,
+                       interval,
+                       K = K,
+                       m = m,
+                       s = s,
+                       tau = Tt)
+
+
+
+
+
+
+
+
 # Get const first
 rovStar <- rovExt(xVec[1], K, m, s, tauVec[1], const = 0)
 rov <- OVfun(xVec[1], K, m, s, tauVec[1], r, output = "OV")
@@ -676,6 +727,9 @@ const <- exp(m * Tt) * (rov - rovStar)
 #const <- rov - rovStar
 rovStar <- rovExt(xVec, K, m, s, tauVec, const)
 rov <- OVfun(xVec, K, m, s, tauVec, r, output = "OV")
+
+
+
 #---------------------------------------------------------------------------
 # Plot
 df_plot <- data.frame(t = 1:Tt, ROV = rov,
